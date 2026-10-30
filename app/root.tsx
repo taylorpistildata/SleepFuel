@@ -21,7 +21,7 @@ import {GlobalStyle} from '~/weaverse/style';
 import {OpenAiAdsPixel} from '~/components/OpenAiAdsPixel';
 import {OPENAI_PIXEL_ID, OPENAI_SDK_URL} from '~/lib/openAiPixel';
 import {MetaPixel} from '~/components/MetaPixel';
-import {META_PIXEL_ID, META_SDK_URL, isMetaPixelHost} from '~/lib/metaPixel';
+import {isMetaPixelHost} from '~/lib/metaPixel';
 
 /**
  * ChatGPT Ads measurement pixel — loader, consent default and init.
@@ -44,20 +44,6 @@ import {META_PIXEL_ID, META_SDK_URL, isMetaPixelHost} from '~/lib/metaPixel';
 const OPENAI_ADS_BOOTSTRAP = `!function(w){if(w.oaiq)return;var q=function(){q.q.push(arguments)};q.q=[];w.oaiq=q}(window);oaiq("consent",false);oaiq("init",{pixelId:${JSON.stringify(
   OPENAI_PIXEL_ID,
 )},debug:${import.meta.env.DEV ? 'true' : 'false'}});`;
-
-/**
- * Meta pixel queue stub, consent default and init.
- *
- * Same approach as the OpenAI bootstrap above: Meta's published snippet
- * injects its own <script> at runtime, which breaks hydration, so only the
- * `fbq` queue stub is inlined and fbevents.js is rendered as a real
- * <script async>. Consent starts revoked and `<MetaPixel/>` grants it once
- * Shopify's customer privacy API allows tracking. No PageView here; the
- * component sends it from Hydrogen's page_viewed so it is never doubled.
- */
-const META_PIXEL_BOOTSTRAP = `!function(f){if(f.fbq)return;var n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[]}(window);fbq("consent","revoke");fbq("init",${JSON.stringify(
-  META_PIXEL_ID,
-)});`;
 
 export type RootLoader = typeof loader;
 
@@ -110,8 +96,7 @@ export async function loader(args: Route.LoaderArgs) {
 
   const {storefront, env} = args.context;
 
-  // Production host only: Oxygen previews, staging and local dev never send
-  // to the live Meta dataset.
+  // Production and Oxygen preview hosts only; local dev never loads it.
   const metaPixelEnabled = isMetaPixelHost(new URL(args.request.url).hostname);
 
   // Weaverse theme settings drive the ticker, header, footer, and popup copy.
@@ -209,9 +194,6 @@ export const Layout = withWeaverse(function RootLayout({
   children?: React.ReactNode;
 }) {
   const nonce = useNonce();
-  const metaPixelEnabled = Boolean(
-    useRouteLoaderData<RootLoader>('root')?.metaPixelEnabled,
-  );
 
   return (
     <html lang="en">
@@ -225,15 +207,6 @@ export const Layout = withWeaverse(function RootLayout({
           dangerouslySetInnerHTML={{__html: OPENAI_ADS_BOOTSTRAP}}
         />
         <script nonce={nonce} async src={OPENAI_SDK_URL} />
-        {metaPixelEnabled ? (
-          <>
-            <script
-              nonce={nonce}
-              dangerouslySetInnerHTML={{__html: META_PIXEL_BOOTSTRAP}}
-            />
-            <script nonce={nonce} async src={META_SDK_URL} />
-          </>
-        ) : null}
         <link rel="stylesheet" href={resetStyles}></link>
         <link rel="stylesheet" href={appStyles}></link>
         <Meta />
@@ -263,6 +236,7 @@ export default function App() {
       consent={data.consent}
     >
       <OpenAiAdsPixel />
+      {/* Meta pixel: loads fbevents.js and inits client side, once. */}
       {data.metaPixelEnabled ? <MetaPixel /> : null}
       <PageLayout {...data}>
         <Outlet />

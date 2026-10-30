@@ -1,22 +1,32 @@
 import {describe, expect, it} from 'vitest';
 import {
+  META_PIXEL_ID,
+  createMetaEventId,
   isMetaPixelHost,
   mapMetaAddToCart,
+  urlPath,
   mapMetaViewContent,
   toDecimal,
 } from './metaPixel';
 
 const VARIANT = 'gid://shopify/ProductVariant/4455667788';
 
+describe('pixel id', () => {
+  it('reports to pixel 1146974057753403', () => {
+    expect(META_PIXEL_ID).toBe('1146974057753403');
+  });
+});
+
 describe('host gating', () => {
-  it('allows only the production storefront', () => {
+  it('allows the production storefront and Oxygen previews', () => {
     expect(isMetaPixelHost('drinksleepfuel.com')).toBe(true);
     expect(isMetaPixelHost('www.drinksleepfuel.com')).toBe(true);
     expect(isMetaPixelHost('DrinkSleepFuel.com')).toBe(true);
+    expect(isMetaPixelHost('01m4e7faf-abc.o2.myshopify.dev')).toBe(true);
   });
 
-  it('excludes previews, staging and local dev', () => {
-    expect(isMetaPixelHost('01m4e7faf-abc.myshopify.dev')).toBe(false);
+  it('excludes staging, local dev and other hosts', () => {
+    expect(isMetaPixelHost('myshopify.dev')).toBe(false);
     expect(isMetaPixelHost('b70c18.myshopify.com')).toBe(false);
     expect(isMetaPixelHost('localhost')).toBe(false);
     expect(isMetaPixelHost('staging.drinksleepfuel.com')).toBe(false);
@@ -127,5 +137,62 @@ describe('AddToCart', () => {
   it('returns null without a variant', () => {
     expect(mapMetaAddToCart({currentLine: null})).toBeNull();
     expect(mapMetaAddToCart(null)).toBeNull();
+  });
+
+  it('ignores a line replaced by a Subscribe & Save switch', () => {
+    const before = {...line(2, '29.99'), id: 'gid://shopify/CartLine/a'};
+    const after = {...line(2), id: 'gid://shopify/CartLine/b'};
+    expect(
+      mapMetaAddToCart({
+        currentLine: after,
+        cart: {lines: {nodes: [after]}},
+        prevCart: {lines: {nodes: [before]}},
+      }),
+    ).toBeNull();
+  });
+
+  it('counts only extra units when a replaced line also grew', () => {
+    const before = {...line(1), id: 'gid://shopify/CartLine/a'};
+    const after = {...line(3), id: 'gid://shopify/CartLine/b'};
+    const params = mapMetaAddToCart({
+      currentLine: after,
+      cart: {lines: {nodes: [after]}},
+      prevCart: {lines: {nodes: [before]}},
+    });
+    expect(params?.contents[0].quantity).toBe(2);
+  });
+
+  it('still reports a new variant added next to an existing line', () => {
+    const existing = {
+      ...line(1),
+      id: 'gid://shopify/CartLine/a',
+      merchandise: {...line(1).merchandise, id: 'gid://shopify/ProductVariant/1'},
+    };
+    const added = {...line(1), id: 'gid://shopify/CartLine/b'};
+    const params = mapMetaAddToCart({
+      currentLine: added,
+      cart: {lines: {nodes: [existing, added]}},
+      prevCart: {lines: {nodes: [existing]}},
+    });
+    expect(params?.content_ids).toEqual(['4455667788']);
+  });
+});
+
+describe('event ids', () => {
+  it('are unique per event', () => {
+    const a = createMetaEventId('AddToCart');
+    const b = createMetaEventId('AddToCart');
+    expect(a).not.toBe(b);
+    expect(a.startsWith('AddToCart.')).toBe(true);
+  });
+});
+
+describe('urlPath', () => {
+  it('returns the path only', () => {
+    expect(
+      urlPath('https://drinksleepfuel.com/products/sleepfuel-drink-mix?x=1'),
+    ).toBe('/products/sleepfuel-drink-mix');
+    expect(urlPath('/cart')).toBe('/cart');
+    expect(urlPath(undefined)).toBeNull();
   });
 });

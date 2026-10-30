@@ -1,61 +1,68 @@
 # Meta (Facebook / Instagram) pixel
 
-Dataset **SleepFuel 4.5.24**, pixel ID `804561264911688`, in the New_SF1
-business portfolio. Built on the same pattern as the OpenAI Ads pixel
-(`docs/openai-ads-pixel.md`); read that first for the reasoning behind the
-head bootstrap, consent handling and CSP rules.
+Pixel ID `1146974057753403`. Built alongside the OpenAI Ads pixel
+(`docs/openai-ads-pixel.md`), which is separate and unaffected.
 
 ## Who sends what
 
 | Event | Sent by |
 | --- | --- |
 | PageView, ViewContent, AddToCart | This storefront (`<MetaPixel/>`) |
-| InitiateCheckout, Purchase, checkout steps | Shopify checkout, via the Facebook & Instagram app (pixel + Conversions API, data sharing set to Maximum) |
+| InitiateCheckout, AddPaymentInfo, Purchase, checkout steps | Shopify checkout (checkout.drinksleepfuel.com) |
 
-InitiateCheckout and Purchase are deliberately **not** sent from the storefront.
-The app already reports them from checkout, and sending them here too would
-double count conversions that ads optimise against.
+InitiateCheckout, AddPaymentInfo and Purchase are deliberately **not** sent
+from the storefront. Shopify checkout already reports them, and sending them
+here too would double count conversions that ads optimise against.
 
 ## How it is wired
 
 | Concern | Where |
 | --- | --- |
-| Queue stub, `consent revoke`, `init`, SDK tag | `app/root.tsx` (`META_PIXEL_BOOTSTRAP`) |
-| Consent + Hydrogen event subscriptions | `app/components/MetaPixel.tsx` |
-| Payload mapping (pure, unit tested) | `app/lib/metaPixel.ts`, `app/lib/metaPixel.test.ts` |
+| fbq stub, init, fbevents.js, consent, Hydrogen subscriptions | `app/components/MetaPixel.tsx` |
+| Payload mapping, pixel id, host gating (pure, unit tested) | `app/lib/metaPixel.ts`, `app/lib/metaPixel.test.ts` |
+| Mounted inside `Analytics.Provider` | `app/root.tsx` |
 | CSP allow list | `app/entry.server.tsx` (`metaPixelCsp`) |
 
-- **Production only.** The pixel renders only when the request host is
-  `drinksleepfuel.com` or `www.drinksleepfuel.com` (`META_PIXEL_HOSTS`). Oxygen
-  previews, any staging environment and local dev never load it, so test
-  traffic never reaches the live dataset. Add a host there if the domain
-  changes.
-- **Consent** reuses `readTrackingConsent` from the OpenAI pixel: analytics and
-  marketing consent are both required. The pixel starts revoked and is granted
-  once Shopify's customer privacy API allows it.
-- **PageView** comes only from Hydrogen's `page_viewed`; the head script calls
-  `init` without tracking, so there is never a double PageView.
-- **Values** are decimals (Meta's format), using the price actually charged
-  (`cost.amountPerQuantity`, so Subscribe & Save is 15% off list) and only the
-  units added in this action.
-- **content_ids** are numeric Shopify variant ids. Before running catalog or
-  dynamic retargeting ads, confirm in Commerce Manager that catalog item ids
-  use the same format, or the events will not match catalog products.
-- The dataset is in a Meta "core setup" category, so only standard
-  parameters are sent; custom parameters and URL paths would be stripped.
+- **One component, one init.** Nothing about Meta is in the document head.
+  `<MetaPixel/>` defines the fbq queue, calls `init` and adds fbevents.js on
+  the client, guarded by a window flag, so client side navigation and React
+  remounts never init twice or add a second SDK tag.
+- **Consent** comes from Shopify's Customer Privacy API through Hydrogen's
+  consent setup (`consent` on `Analytics.Provider`). Hydrogen withholds all
+  events until the privacy API has loaded and analytics is allowed. The pixel
+  is only loaded once marketing is allowed, starting with `consent grant`;
+  if a visitor later opts out it gets `consent revoke`, and `grant` again if
+  they opt back in. A visitor who never allows marketing never loads
+  fbevents.js.
+- **PageView** on first load and every client side route change, from
+  Hydrogen's `page_viewed`.
+- **ViewContent** once per visit to the product page, from
+  `<Analytics.ProductView>` in `app/routes/products.$handle.tsx` (the
+  advertorial page is custom, so the view is published explicitly). Changing
+  pack size or purchase mode does not send another one.
+- **AddToCart** from Hydrogen's `product_added_to_cart`, published after every
+  successful cart change that adds units: every add to cart button on the page
+  (hero and sticky bar, all through `AddToCartButton`) and the cart drawer's
+  quantity plus. Switching a line to Subscribe & Save in the drawer is not
+  counted as an add.
+- **content_ids** are numeric Shopify variant ids. Values are decimals at the
+  price actually charged (Subscribe & Save is 15% off list), for the units
+  added in that action. Currency is USD.
+- **eventID** is unique per event (`<Event>.<uuid>`), passed as
+  `fbq('track', name, params, {eventID})`.
+- **Hosts.** Loads on drinksleepfuel.com, www.drinksleepfuel.com and Oxygen
+  preview hosts (`*.myshopify.dev`), so previews can be checked before
+  release. Preview traffic does reach the pixel; filter it in Events Manager
+  if needed. Local dev never loads it.
 
-## Verifying after deploy
+## Verifying
 
-1. Open drinksleepfuel.com with the **Meta Pixel Helper** Chrome extension.
-2. Load a product page: one PageView and one ViewContent.
-3. Add to cart: one AddToCart with the right value.
-4. In Events Manager > SleepFuel 4.5.24 > Overview, drinksleepfuel.com should
-   appear under Websites within about 30 minutes.
-
-Verified locally: unit tests, typecheck (at its existing baseline), lint and a
-production build; the head renders `consent revoke` then `init` with the
-nonce; the CSP allows Meta with no violations; the pixel is absent on
-non-production hosts; consent switches to `grant` when Shopify's privacy API
-allows tracking. Hydrogen's analytics events could not be exercised end to end
-locally because the sandbox cannot reach the Storefront API, so confirm the
-events on the live site with the steps above.
+1. Open the page with the **Meta Pixel Helper** extension, or Events Manager >
+   Test Events.
+2. Load `/products/sleepfuel-drink-mix`: one PageView and one ViewContent for
+   1146974057753403.
+3. Each add to cart button, and the plus in the cart drawer: one AddToCart
+   with the variant id and value.
+4. Navigate client side to another page: one PageView.
+5. Opt out of marketing (`window.Shopify.customerPrivacy.setTrackingConsent`
+   with marketing false): `consent revoke`, then no further events.

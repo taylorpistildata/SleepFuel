@@ -14,27 +14,62 @@
  * the domain in URLs, so sending more would only be discarded.
  */
 
-import {toQuantity, variantContentId, type CartLike} from '~/lib/openAiPixel';
+import {toQuantity, variantContentId} from '~/lib/openAiPixel';
 
-/** Dataset "SleepFuel 4.5.24" in Meta Events Manager. */
-export const META_PIXEL_ID = '804561264911688';
+/** Meta pixel (dataset) the storefront reports to. */
+export const META_PIXEL_ID = '1146974057753403';
 export const META_SDK_URL = 'https://connect.facebook.net/en_US/fbevents.js';
 
 /**
- * Hosts allowed to load the pixel: production only.
- *
- * Oxygen preview deployments (`*.myshopify.dev`), local dev and any staging
- * environment are excluded, so test clicks never reach the live dataset that
- * ads optimise against.
+ * Hosts allowed to load the pixel: production plus Oxygen preview
+ * deployments (`*.myshopify.dev`), so a preview can be verified with Meta
+ * Pixel Helper and Test Events before it ships. Local dev, the raw
+ * myshopify.com domain and any other host never load it.
  */
 export const META_PIXEL_HOSTS: ReadonlySet<string> = new Set([
   'drinksleepfuel.com',
   'www.drinksleepfuel.com',
 ]);
 
+/** Oxygen preview and branch deployments are served from this suffix. */
+export const OXYGEN_PREVIEW_HOST_SUFFIX = '.myshopify.dev';
+
 export function isMetaPixelHost(hostname: string | null | undefined): boolean {
   if (!hostname) return false;
-  return META_PIXEL_HOSTS.has(hostname.toLowerCase());
+  const host = hostname.toLowerCase();
+  return META_PIXEL_HOSTS.has(host) || host.endsWith(OXYGEN_PREVIEW_HOST_SUFFIX);
+}
+
+/**
+ * Unique id for one fbq event, passed as `{eventID}` so Meta can dedupe it
+ * against the same event reported server side.
+ */
+export function createMetaEventId(
+  event: string,
+  random: () => string = defaultRandomId,
+): string {
+  return `${event}.${random()}`;
+}
+
+function defaultRandomId(): string {
+  try {
+    if (typeof crypto !== 'undefined' && crypto.randomUUID) {
+      return crypto.randomUUID();
+    }
+  } catch {
+    // Fall through.
+  }
+  return `${Date.now().toString(36)}${Math.random().toString(36).slice(2, 10)}`;
+}
+
+/** Path of a URL (absolute or relative), or null if it cannot be parsed. */
+export function urlPath(url: string | null | undefined): string | null {
+  if (!url) return null;
+  try {
+    return new URL(url, 'https://drinksleepfuel.com').pathname;
+  } catch {
+    return null;
+  }
 }
 
 export type MetaContent = {id: string; quantity: number; item_price?: number};
@@ -52,9 +87,63 @@ export type MetaEventParams = {
 export type MetaStorefrontEvent = 'PageView' | 'ViewContent' | 'AddToCart';
 
 type ShopLike = {currency?: string | null} | null;
-type CartLineLike = NonNullable<
-  NonNullable<NonNullable<CartLike>['lines']>['nodes']
->[number];
+type MoneyLike = {amount?: string | null; currencyCode?: string | null} | null;
+
+/** Structural cart line, so Hydrogen type changes can't alter the payload. */
+type CartLineLike = {
+  id?: string | null;
+  quantity?: number | null;
+  cost?: {amountPerQuantity?: MoneyLike} | null;
+  merchandise?: {
+    id?: string | null;
+    title?: string | null;
+    price?: MoneyLike;
+    product?: {title?: string | null} | null;
+  } | null;
+} | null;
+
+type CartLike = {
+  lines?:
+    | {
+        nodes?: CartLineLike[] | null;
+        edges?: Array<{node: CartLineLike}> | null;
+      }
+    | null;
+} | null;
+
+function cartLines(cart: CartLike | undefined | null): CartLineLike[] {
+  const lines = cart?.lines;
+  if (!lines) return [];
+  if (Array.isArray(lines.nodes)) return lines.nodes;
+  if (Array.isArray(lines.edges)) return lines.edges.map((edge) => edge.node);
+  return [];
+}
+
+/**
+ * Quantity the shopper already had when Hydrogen reports a brand new line.
+ *
+ * Switching a line to Subscribe & Save in the cart drawer can replace the line
+ * (new line id, same variant). Hydrogen then reports the new line as "added",
+ * which is not a real add to cart. If the previous cart held the same variant
+ * on a line that no longer exists, that quantity was already in the cart.
+ */
+function replacedLineQuantity(
+  payload: {
+    currentLine?: CartLineLike;
+    cart?: CartLike;
+    prevCart?: CartLike;
+  } | null,
+): number {
+  const variant = payload?.currentLine?.merchandise?.id;
+  if (!variant) return 0;
+  const currentIds = new Set(cartLines(payload?.cart).map((line) => line?.id));
+  return cartLines(payload?.prevCart)
+    .filter(
+      (line) =>
+        line?.merchandise?.id === variant && !currentIds.has(line?.id),
+    )
+    .reduce((sum, line) => sum + toQuantity(line?.quantity), 0);
+}
 
 /** Decimal amount, or null when the input is not a usable number. */
 export function toDecimal(
@@ -138,6 +227,8 @@ export function mapMetaAddToCart(
   payload: {
     prevLine?: CartLineLike;
     currentLine?: CartLineLike;
+    cart?: CartLike;
+    prevCart?: CartLike;
     shop?: ShopLike;
   } | null,
 ): MetaEventParams | null {
@@ -148,8 +239,9 @@ export function mapMetaAddToCart(
   const current = toQuantity(line?.quantity);
   const previous = payload?.prevLine
     ? toQuantity(payload.prevLine.quantity)
-    : 0;
-  const added = current - previous > 0 ? current - previous : 1;
+    : replacedLineQuantity(payload);
+  if (current - previous <= 0) return null;
+  const added = current - previous;
 
   const paid = line?.cost?.amountPerQuantity;
   const list = line?.merchandise?.price;
