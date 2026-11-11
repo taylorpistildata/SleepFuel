@@ -3,6 +3,9 @@ import {useThemeSetting} from '~/weaverse/use-theme-setting';
 import popupImage from '~/assets/feature-counter.jpg';
 
 const COOKIE_NAME = 'sf_popup_seen';
+/** Set once the visitor has unlocked a code; hides the side tab. */
+const SIGNED_UP_COOKIE = 'sf_popup_signed_up';
+const SIGNED_UP_DAYS = 365;
 const COOKIE_DAYS = 30;
 const DELAY_MS = 4000;
 
@@ -32,6 +35,8 @@ export function EmailCapturePopup() {
   const [status, setStatus] = useState<Status>('idle');
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [revealCode, setRevealCode] = useState('WELCOME10');
+  /** Null until read on the client, so the tab never flashes in SSR. */
+  const [signedUp, setSignedUp] = useState<boolean | null>(null);
 
   // Headline copy is editable in Studio (Theme > Customize > Email popup).
   // The Klaviyo flow, list ids, and discount codes stay in code on purpose.
@@ -47,12 +52,29 @@ export function EmailCapturePopup() {
   );
 
   useEffect(() => {
-    if (hasCookie(COOKIE_NAME)) return;
+    setSignedUp(hasCookie(SIGNED_UP_COOKIE));
+  }, []);
+
+  useEffect(() => {
+    if (hasCookie(COOKIE_NAME) || hasCookie(SIGNED_UP_COOKIE)) return;
     const t = window.setTimeout(() => setOpen(true), DELAY_MS);
     return () => window.clearTimeout(t);
   }, []);
 
+  function markSignedUp() {
+    setCookie(SIGNED_UP_COOKIE, '1', SIGNED_UP_DAYS);
+  }
+
+  /** "Save 10%" side tab: reopens the popup at the start. */
+  function openFromTab() {
+    setStep('email');
+    setStatus('idle');
+    setErrorMsg(null);
+    setOpen(true);
+  }
+
   function dismiss() {
+    if (hasCookie(SIGNED_UP_COOKIE)) setSignedUp(true);
     setOpen(false);
     setCookie(COOKIE_NAME, '1', COOKIE_DAYS);
   }
@@ -74,6 +96,7 @@ export function EmailCapturePopup() {
     setErrorMsg(null);
     try {
       await subscribe('email'); // → Newsletter list (WELCOME10)
+      markSignedUp();
       setRevealCode('WELCOME10');
       setStatus('idle');
       setStep('phone');
@@ -104,7 +127,26 @@ export function EmailCapturePopup() {
     setStep('reveal');
   }
 
-  if (!open) return null;
+  if (!open) {
+    if (signedUp !== false) return null;
+    return (
+      <button
+        type="button"
+        onClick={openFromTab}
+        aria-haspopup="dialog"
+        className="fixed right-0 top-1/2 z-40 rounded-r-xl px-2 py-4 text-xs font-semibold uppercase tracking-wider shadow-lg transition-[padding] hover:pl-3 sm:px-2.5 sm:py-5 sm:text-sm"
+        style={{
+          background: 'var(--color-awaking)',
+          color: 'var(--color-midnight)',
+          fontFamily: 'var(--font-body)',
+          writingMode: 'vertical-rl',
+          transform: 'translateY(-50%) rotate(180deg)',
+        }}
+      >
+        Save 10%
+      </button>
+    );
+  }
 
   const badge =
     step === 'phone' || step === 'confirm' || revealCode === 'WELCOME15'
