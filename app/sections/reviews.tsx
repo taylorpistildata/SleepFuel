@@ -28,9 +28,8 @@ type ReviewsSectionProps = Partial<HydrogenComponentProps> & {
 /**
  * Customer reviews, rendered from `app/data/reviews.json`.
  *
- * The headline average and count cover every approved review in that export;
- * the cards are a sample kept proportional to the real rating mix, so the page
- * doesn't read as though only 5-star reviews exist.
+ * The headline average, count and distribution are computed from exactly the
+ * reviews in that file, so the summary always matches the cards shown.
  */
 const ReviewsSection = forwardRef<HTMLElement, ReviewsSectionProps>(
   function ReviewsSection({heading, children, ...rest}, ref) {
@@ -127,6 +126,7 @@ function ReviewCard({review}: {review: Review}) {
             Verified buyer
           </span>
         )}
+        {review.incentivized && <span>Incentivized review</span>}
         <span className="ml-auto tabular-nums">{review.date}</span>
       </div>
     </article>

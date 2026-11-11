@@ -1,167 +1,17 @@
 {
-  "source": "Okendo export sleepfuel_calm_sleep_demo_reviews.xlsx (2026-09-16)",
-  "total": 2638,
-  "average": 4.51,
+  "source": "Okendo export sleepfuel_calm_sleep_demo_reviews.xlsx (2026-09-16); filtered 2026-11-11 to SleepFuel drink mix reviews only (templated, duplicate and other product reviews removed)",
+  "total": 22,
+  "average": 4.68,
   "distribution": {
-    "5": 1561,
-    "4": 883,
-    "3": 176,
-    "2": 11,
-    "1": 7
+    "5": 15,
+    "4": 7,
+    "3": 0,
+    "2": 0,
+    "1": 0
   },
-  "incentivizedCount": 1480,
-  "verifiedCount": 2082,
+  "incentivizedCount": 12,
+  "verifiedCount": 15,
   "reviews": [
-    {
-      "id": "ed7ecc916992",
-      "title": "Noticeable difference",
-      "body": "Helps me wind down most nights. Magnesum blend is noticeable. I still wake once, but I get back to slep easier. Would love it a touch stronger. Great custumer service and shipping was fast.",
-      "rating": 4,
-      "name": "Arthur G.",
-      "date": "2026-09-16",
-      "verified": false,
-      "incentivized": true
-    },
-    {
-      "id": "7d9bea6bffb8",
-      "title": "Nice purple drink",
-      "body": "Really solid drink mix. I fall asleep faster than before and the purple color is fun. Taste is good but I add a splash of cold water extra so it is not too earthy. Great customer service and shipping was fast.",
-      "rating": 4,
-      "name": "Marley W.",
-      "date": "2026-09-15",
-      "verified": true,
-      "incentivized": true
-    },
-    {
-      "id": "f75464ce23cc",
-      "title": "4 stars from me",
-      "body": "Helps me wind down most nights. Magnesium blend is noticeable. I still wake once, but I get back to sleep easier. Would love it a touch stronger. Great customer service and shipping was fast.",
-      "rating": 4,
-      "name": "B. R.",
-      "date": "2026-09-15",
-      "verified": false,
-      "incentivized": false
-    },
-    {
-      "id": "d13418e5b02c",
-      "title": "Worth trying",
-      "body": "Great customer experience and the powder mixes clean. Effectiveness is maybe 80% of what I hoped, but way better than melatonin for me. Great customer service and shipping was fast.",
-      "rating": 4,
-      "name": "Douglas B.",
-      "date": "2026-09-15",
-      "verified": false,
-      "incentivized": false
-    },
-    {
-      "id": "9a5bce46bfcc",
-      "title": "Sleep bliss",
-      "body": "I look forward to this little purple ritual every night. I mix it in a little water about 45-60 minutes before bed. Fall asleep faster, stay asleep longer, and wake up ready to go. The magnesium is the piece I was missing. Do not sleep on this mix. Pun intended.",
-      "rating": 5,
-      "name": "Jack G.",
-      "date": "2026-09-13",
-      "verified": true,
-      "incentivized": false
-    },
-    {
-      "id": "fbb1557ced9d",
-      "title": "Calm + Slep slaps",
-      "body": "Finally an all-natural drink powder that knocks me out withought the hangover. I mix it in a little water about 45-60 minutes befor bed. Fall asleep faster, stay asleep longer, and wake up ready to go. The magnesium is the piece I was missing. Thank you SleepFuel.",
-      "rating": 5,
-      "name": "Shannon",
-      "date": "2026-09-10",
-      "verified": true,
-      "incentivized": false
-    },
-    {
-      "id": "8783baad34ce",
-      "title": "Weak results",
-      "body": "Really nice custumer service team, they were polite in chat. TikTok Shop tracking sat on label created for almost a week even though USPS already had the box. That part is on the shop, not slepFuel. Pretty color, rough taste. Not something I want as a nightly drink. Not worthless, just way weaker than the ads made it sound. Not mad at the brand, just not repurchase for me.",
-      "rating": 2,
-      "name": "Leo K.",
-      "date": "2026-09-03",
-      "verified": true,
-      "incentivized": true
-    },
-    {
-      "id": "070b3307ca40",
-      "title": "Okay sleep drink",
-      "body": "Shipping was quick and support answered my email the same day. TikTok Shop charged me twice then refunded a week later. Painful checkout, but SleepFuel support pointed me to the right help article. Wish the taste was sweeter. I mix it colder and that helps, but it is not a treat drink for me. I fall asleep faster than before, staying down the whole night is still a work in progress. Not a one-star product. The brand side is good. The shop and the taste just got me.",
-      "rating": 3,
-      "name": "Nicole W.",
-      "date": "2026-08-30",
-      "verified": true,
-      "incentivized": false
-    },
-    {
-      "id": "350e62936af8",
-      "title": "No effect",
-      "body": "Shipping was quick and cheaper than the last sleep aid I was buying. TikTok Shop tracking sat on label created for almost a week even though USPS already had the box. That part is on the shop, not SleepFuel. Pretty color, rough taste. Not something I want as a nightly drink. Felt like I wasted the pouch. No calmer, no heavier eyelids, nothing. Not mad at the brand, just not repurchase for me.",
-      "rating": 1,
-      "name": "Paisley H.",
-      "date": "2026-08-25",
-      "verified": true,
-      "incentivized": false
-    },
-    {
-      "id": "5e26a96cd908",
-      "title": "Works a little",
-      "body": "Cheaper than what I was using before and the company seems to actually care. The TikTok Shop app kept dropping the discount code at checkout. I still got the product, just extra friction that is on the shop not the brand. The magnesium twang is there. I get why, I just do not love sipping it. I fall asleep faster than before, staying down the whole night is still a work in progress. Keeping the empty rating honest, but I may try one more pouch with a different mix-in.",
-      "rating": 3,
-      "name": "T. G.",
-      "date": "2026-08-24",
-      "verified": false,
-      "incentivized": true
-    },
-    {
-      "id": "b791764750cd",
-      "title": "Helps a bit",
-      "body": "Fast shipping and it was cheaper than the last sleep aid I was buying. The TikTok Shop app kept dropping the discount code at checkout. I still got the product, just extra friction that is on the shop not the brand. Wish the taste was sweeter. I mix it colder and that helps, but it is not a treat drink for me. I fall asleep faster than before, staying down the whole night is still a work in progress. Keeping the empty rating honest, but I may try one more pouch with a different mix-in.",
-      "rating": 3,
-      "name": "Mary H.",
-      "date": "2026-08-22",
-      "verified": true,
-      "incentivized": true
-    },
-    {
-      "id": "0b846f442764",
-      "title": "Okay sleep drink",
-      "body": "Customer service has been excellent every time I have written in. Had to message through TikTok Shop three times about a missing packing slip. Again, shop logistics, not the formula. I do not fully love the taste. A little more herbal/mineral than I expected from the pretty purple color. I fall asleep faster than before, staying down the whole night is still a work in progress. Not a one-star product. The brand side is good. The shop and the taste just got me.",
-      "rating": 3,
-      "name": "Benjamin W.",
-      "date": "2026-08-22",
-      "verified": true,
-      "incentivized": true
-    },
-    {
-      "id": "b2c12cb7de9a",
-      "title": "Pretty and potent",
-      "body": "Magnesium plus the rest of the blend is chef's kiss for sleep. I mix it in a little water about 45-60 minutes before bed. Fall asleep faster, stay asleep longer, and wake up ready to go. The magnesium is the piece I was missing. Best decision I made for my nights.",
-      "rating": 5,
-      "name": "Eric W.",
-      "date": "2026-08-21",
-      "verified": true,
-      "incentivized": true
-    },
-    {
-      "id": "d3dcc836ad41",
-      "title": "Works every night",
-      "body": "Synergistic ingredients for real. You can feel the magnesium doing its thing. I mix it in a little water about 45-60 minutes before bed. Fall asleep faster, stay asleep longer, and wake up ready to go. The magnesium is the piece I was missing. This is my nightly non-negotiable now.",
-      "rating": 5,
-      "name": "Margaret Q.",
-      "date": "2026-08-20",
-      "verified": false,
-      "incentivized": true
-    },
-    {
-      "id": "a42ab1e71231",
-      "title": "Sleepy time",
-      "body": "I have been in dire need to improve my sleep habits. I have never been a good sleeper, usually sleeping about 4-5 hours/night. At my son-in-law’s suggestion I decided to try SleepFuel products. I bought the regular strength drink mix and the sleep drink mix. I have been using them together for 3 months now. During that time my sleep time has improved to more than 6 hours, often 6½ hours. I wake up , well rested, never groggy, it is a good night’s sleep. I am quite pleased with this product. Also, I told my doctor I was using this sleep aid and he was fine with it, esp since I am getting more and better sleep.",
-      "rating": 5,
-      "name": "Marsha B.",
-      "date": "2026-07-06",
-      "verified": true,
-      "incentivized": true
-    },
     {
       "id": "d5a72da3fb3b",
       "title": "What a Find!",
@@ -169,16 +19,6 @@
       "rating": 5,
       "name": "Michelle R.",
       "date": "2026-06-15",
-      "verified": true,
-      "incentivized": true
-    },
-    {
-      "id": "648f43f369a2",
-      "title": "Longer and Deeper Sleep",
-      "body": "I have been taking the infused drink mix for 10 days now 1-2 hours before laying down to sleep and during that time I have been able to sleep longer (5+ hours) and then return back to sleep after using the restroom or feeding my cat. I am very pleased with the product and plan to reorder within the next few days.",
-      "rating": 5,
-      "name": "Owen J.",
-      "date": "2026-06-11",
       "verified": true,
       "incentivized": true
     },
@@ -213,32 +53,12 @@
       "incentivized": true
     },
     {
-      "id": "f21f40781479",
-      "title": "Good product",
-      "body": "These scoop of mix's tastes surprisingly good and are well made as far as quality is concerned a bit early to tell how well they're working, but I do seem to sleep a little bit better during the night… Time will tell.",
-      "rating": 4,
-      "name": "Steve L.",
-      "date": "2026-02-17",
-      "verified": true,
-      "incentivized": true
-    },
-    {
       "id": "56cb9eae8a1e",
       "title": "Goodnight..sleep tight",
       "body": "I have had issues falling asleep for as long as I can remember everything I tried either had bad side effects or didn't work. Although I was skeptical I tried it and was super surprised. Can't remember when I fell asleep but when I woke up I saw I had slept for 7 hours uninterrupted. Now I'm never without my sleepfuel when I need it.",
       "rating": 5,
       "name": "DAGMAR S.",
       "date": "2026-01-28",
-      "verified": true,
-      "incentivized": true
-    },
-    {
-      "id": "047651d3ec13",
-      "title": "Best Sleep in Years",
-      "body": "For several years I have been bothered by leg cramps that wake me nearly every night. Since using the Infused Drink mix Extra Strength for the last 3 weeks I have more restful sleep without the nagging wake-ups. I have recommended to a relative who has trouble sleeping.",
-      "rating": 5,
-      "name": "Joyce H.",
-      "date": "2025-10-02",
       "verified": true,
       "incentivized": true
     },
@@ -253,52 +73,12 @@
       "incentivized": true
     },
     {
-      "id": "174f80d61f94",
-      "title": "Only product that helps.",
-      "body": "SleepFuel are the only Infused Drink mix from Hemp that have helped me fall asleep & stay asleep. I need a low dose of thc & mainly CBDs' to help me with my insomnia & inability to stay asleep to make me wake up feeling refreshed & rested. I have tried many & different formulations but this is the only one that has really helped me. No need to continue trying other remedies. I have found what I needed. Try it!",
-      "rating": 5,
-      "name": "robert s.",
-      "date": "2025-09-17",
-      "verified": true,
-      "incentivized": true
-    },
-    {
-      "id": "39fd94bf774f",
-      "title": "Quality sleep finally",
-      "body": "I finally am getting quality sleep with your Sleep Bundle. I have dozens of sleep products and this is the first one to enable to go into a deep sleep. When I wake up during the night I am able to go back to sleep which is a first. thank you for developing these products.",
-      "rating": 5,
-      "name": "Shirley H.",
-      "date": "2025-08-26",
-      "verified": true,
-      "incentivized": true
-    },
-    {
-      "id": "657b41e5b689",
-      "title": "Pretty good stuff",
-      "body": "My sleep prescription might help me fall asleep, but these help me stay asleep through the night. I wish the flavor was just a little stronger, but it tastes surprisingly good - and most importantly, there's none of that \"leafy\" aftertaste some drink mixes have. I took one star off because my order arrived about 4 days late & because the pouch is very difficult to open.",
-      "rating": 4,
-      "name": "Samantha G.",
-      "date": "2025-08-21",
-      "verified": true,
-      "incentivized": true
-    },
-    {
       "id": "2fd4b28a0824",
       "title": "VETERAN APPROVED",
       "body": "Hands down a 5-star experience! As a Marine combat veteran with eight years of service and multiple deployments, I’ve tried everything under the sun to manage PTSD and sleep issues This product changed that. Within 15 minutes of taking it, I’m out cold This company not only delivers on quality but also takes care of its own",
       "rating": 5,
       "name": "Terry P.",
       "date": "2025-08-04",
-      "verified": true,
-      "incentivized": true
-    },
-    {
-      "id": "ab9426f745ff",
-      "title": "Sleeping better!",
-      "body": "After taking rx sleeping pills for many years, sleep fuel is a refreshing change! I tried the drink mix first, which gently helped me go to sleep. Then I tried the drink mix, and they're just enough stronger that I'm not getting up as much during the night. I'm very relieved that I found a more natural way to get better sleep.",
-      "rating": 4,
-      "name": "Lesa M.",
-      "date": "2025-08-02",
       "verified": true,
       "incentivized": true
     },
@@ -311,46 +91,6 @@
       "date": "2025-08-01",
       "verified": true,
       "incentivized": true
-    },
-    {
-      "id": "ca97badc0b53",
-      "title": "These drink mix work well and fast",
-      "body": "I had tries the stronger dose but they wete too strong for me. These ones take about 20mins to kick in and i use along w/ sleep fuel pump mix. I easily get 6-7 hrs and even the 2-3 times i have to get up, i fall right back to sleep and feel pretty good in the am",
-      "rating": 5,
-      "name": "Robert M.",
-      "date": "2025-07-29",
-      "verified": true,
-      "incentivized": true
-    },
-    {
-      "id": "116267427ca4",
-      "title": "They work!",
-      "body": "I’ve been taking these drink mix nightly for 5 months. I can sleep now! Even the rare times I wake up during the night, I’m able to get back to sleep and not tossing and turning ‘til daylight. I wake up refreshed and ready for the day, not feeling like I can’t wake up or with a “sleep hangover”.",
-      "rating": 5,
-      "name": "Kathleen Y.",
-      "date": "2025-07-09",
-      "verified": true,
-      "incentivized": true
-    },
-    {
-      "id": "09ea1267a96d",
-      "title": "SleepFuel 3 Pack Sleep drink mix",
-      "body": "My last purchase was the subscription of the 3 pack. One was for me, while the other two were for friends. They both had decades of sleep deprivation as I have. They both emailed me within the first week telling me how PLEASED they were that it worked and will use it always as will I. It's WONDERFUL to FINALLY get a good night's sleep every night!!",
-      "rating": 5,
-      "name": "Portia P.",
-      "date": "2025-06-27",
-      "verified": true,
-      "incentivized": true
-    },
-    {
-      "id": "f7c20ba31ad1",
-      "title": "SleepFuel drink mix and drink mix..",
-      "body": "Ordered the SleepFuel drink mix and was pretty happy with my results. I would still wake 3 or 4am and mix another half scoop. Still way more restful sleep than previous to purchase. When I reordered mix I added the drink mix to the order to try. So glad I did! What seems to be working for me is to take the mix while getting ready for bed then one small scoop of the drink mix getting into bed. No more waking up those weird hours. Thank You!",
-      "rating": 4,
-      "name": "Karen G.",
-      "date": "2025-06-04",
-      "verified": true,
-      "incentivized": false
     },
     {
       "id": "aa3b77027611",
@@ -373,82 +113,12 @@
       "incentivized": true
     },
     {
-      "id": "f30c0e346205",
-      "title": "SleepFuel™ - Slep drink mix",
-      "body": "I was surprised with the results of taking SleepFuel! I'm sleeping better than I have in YEARS! I'm currently dealing with carpel tunnel adn will have surgery soon.The pain wakes me up briefly, but I sleep sound waking up feeling refreshed, not groggy! I will continue to use SleepFuel. What a GREAT product!",
-      "rating": 5,
-      "name": "Portia P.",
-      "date": "2025-05-07",
-      "verified": true,
-      "incentivized": true
-    },
-    {
       "id": "ee085b7e0f7e",
       "title": "Still in Testing",
       "body": "I am still having some of the same sleep patterns, but once I do go to sleep, I love not having the drowsy feeling, and I fall right asleep but However initially I am still working on trying to determine the doses to get the proper sleep /.",
       "rating": 4,
       "name": "Joseph B.",
       "date": "2025-05-04",
-      "verified": true,
-      "incentivized": true
-    },
-    {
-      "id": "6c0616a0b576",
-      "title": "Finally found something",
-      "body": "I got problems with insomnia and staying asleep for years I tried a lot of over-the-counter and supplements and prescription AIDS the Sleep fuel Extra Strength drink mix have enabled me to get six to seven hours of sleep every night",
-      "rating": 4,
-      "name": "Marc M.",
-      "date": "2025-04-29",
-      "verified": true,
-      "incentivized": true
-    },
-    {
-      "id": "8fc85d6571ce",
-      "title": "Infused Drink mix - Extra Strength have helped my wife get the sleep she needs",
-      "body": "Hi there! Any one of you who thinks maybe these drink mix might not work is in for a real eye opener. It took a couple of days to adjust the dosing, after that close to a full nights sleep taking two drink mix. One just before going to bed and the next one around 1am when nature calls. I can't tell you that you will have the same experience but you won't know until you try these drink mix. My hats off to the Pharmacist who came up with this formula and dosing. Thank you SleepFuel.",
-      "rating": 5,
-      "name": "Lyman B.",
-      "date": "2025-04-24",
-      "verified": true,
-      "incentivized": true
-    },
-    {
-      "id": "f5d3fc928228",
-      "title": "Miracle",
-      "body": "After five long years of struggling with sleep Honestly, I was skeptical. Another product promising better sleep? Been there. But from the very first night I tried these drink mix, I noticed a difference. Within about 30 minutes, I felt calm What blew me away the most is that something so simple and natural could work where so many other products failed. Sleep Fuel has truly been a surprise miracle in my life. If you’ve been battling insomnia or restless nights and nothing else has worked, these drink mix are absolutely worth a try.",
-      "rating": 5,
-      "name": "Michael J.",
-      "date": "2025-04-17",
-      "verified": true,
-      "incentivized": true
-    },
-    {
-      "id": "13c5ceb6b076",
-      "title": "Sleep bundle",
-      "body": "I have had insomnia for many years. I am working my way through all of the different products.\nThe sleep bundle helps me to get to sleep and sleep better during the night. There weren't really any instructions, so I take 1 of each of the drink mix. The drink mix makes me feel stoned, so I only use it if I'm not falling asleep as fast as I would like.",
-      "rating": 5,
-      "name": "Debi M.",
-      "date": "2025-04-04",
-      "verified": true,
-      "incentivized": true
-    },
-    {
-      "id": "7b7b3a37a7e4",
-      "title": "Takes two to work for me",
-      "body": "They work. Takes awhile to kick in. The problem is the next morning you feel lethargic. You drag yourself around, trying to get things done. You don't feel that your clear headed for a few hours and tend to sleep in late.",
-      "rating": 4,
-      "name": "Carol B.",
-      "date": "2025-03-03",
-      "verified": true,
-      "incentivized": true
-    },
-    {
-      "id": "a5254e70050d",
-      "title": "Work great!",
-      "body": "Tried the sleep starter set and very happy with the Drink mix. There's a real difference between the yellow and green runs but both work well. Good flavor and definitely helps me slowly drift off and stay asleep. Planning to keep these on a steady rotation! Haven't tried the drink mix yet but will give that a shot eventually.",
-      "rating": 5,
-      "name": "Jason H.",
-      "date": "2025-02-03",
       "verified": true,
       "incentivized": true
     },
@@ -461,36 +131,6 @@
       "date": "2024-12-29",
       "verified": true,
       "incentivized": true
-    },
-    {
-      "id": "f19bdc72f61d",
-      "title": "Of all the natural sleep",
-      "body": "Of all the natural sleep aids I have tried (I have tried many if not all) this one is the most effective at getting me to sleep. I was awake only about 3hrs later though the first night. The 2nd night it had no effect at all. the 3rd night I slept an hour and have not used it since. So it has been hit or miss but will try it again later. As far as natural sleep aids I put this second after the Klova extra strength sleep patch which helps me stay asleep better.",
-      "rating": 4,
-      "name": "keith h.",
-      "date": "2024-09-20",
-      "verified": true,
-      "incentivized": false
-    },
-    {
-      "id": "8d8e483a68d2",
-      "title": "Fall asleep and stay asleep",
-      "body": "Sleepfuel is a wonderful product - it has helped me fall asleep quickly and stay asleep throughout the night. I did take a few nights to get used to it but has consistently been working well for the several months. i love it instead of having to take sweet drink mix before bed. Highly recommend!",
-      "rating": 4,
-      "name": "Micalla H.",
-      "date": "2024-08-19",
-      "verified": true,
-      "incentivized": false
-    },
-    {
-      "id": "cf4e71c8ba63",
-      "title": "It works!!!",
-      "body": "It  actually works. For me it kicks in at about 30 mins, instead of 15, but thats not a big deal. there have been a couple of instances where the suggested number servings weren't enough. So 45 mins to an hour later I had to mix again. No grogginesss in the morning, which is great. Im on my second bottle.",
-      "rating": 4,
-      "name": "Ina",
-      "date": "2024-08-06",
-      "verified": true,
-      "incentivized": false
     },
     {
       "id": "3e12baeee30e",
@@ -523,26 +163,6 @@
       "incentivized": false
     },
     {
-      "id": "fca3d109b089",
-      "title": "What a great way to start a day, or extend a day",
-      "body": "Having been a coffee drinker all my life, I didn't think I would ever find an alternative. This is IT ! Running a business takes all of my attention and constant focus (great name by the way). This product delivers in the AM and in the mid-afternoon to help me stay on task. I've never been more productive and I don't have the constant desire for coffee anymore. What a healthier way to achieve this result.",
-      "rating": 5,
-      "name": "Sean H.",
-      "date": "2024-01-12",
-      "verified": false,
-      "incentivized": false
-    },
-    {
-      "id": "928393825f02",
-      "title": "SleepFuel makes my thinking sharp!",
-      "body": "SeepFuel Focus is the best! I use to struggle with staying on task. I use it everyday at work for keeping me focused and sharp on all the details of my daily documentation. The “Focus” has put me on top of my work game! I highly recommend this to everyone! The Lions Mane is one of the natural ingredients that will make you feel your best and put your work performance on top!",
-      "rating": 5,
-      "name": "Allyson M.",
-      "date": "2024-01-07",
-      "verified": true,
-      "incentivized": false
-    },
-    {
       "id": "497498bbf286",
       "title": "Sleep fuels leaves me refreshed and ready to go!",
       "body": "I have always had trouble sleeping but Sleep Fuel really helps me fall asleep, stay asleep, and wake up feeling rested. Shipping was fast and painless. I was impressed by the quality and informativeness of the packaging. Mixing was easy and I was pleasantly surprised by the taste (minty without being overpowering). I began to feel the effects about 15 minutes later and slept like a log! I've been using sleep fuel for about a month and Sleep Fuel is just as effective now as it was the first day I tried it. Huge fan of this product and would highly recommend it to anyone on the fence.",
@@ -570,26 +190,6 @@
       "name": "Allyson M.",
       "date": "2024-01-04",
       "verified": true,
-      "incentivized": false
-    },
-    {
-      "id": "2787b6ec9f75",
-      "title": "Shocked by results",
-      "body": "I was skeptical of this product as I’ve never tried an drink mix before but it blew me away. I’ve never taken a supplement that I could feel within 15 minutes. I’ve completely switched off eating melatonin drink mix and I’m now mixing Sleepfuel every night. Thank you!!",
-      "rating": 5,
-      "name": "Nicole K.",
-      "date": "2024-01-04",
-      "verified": false,
-      "incentivized": false
-    },
-    {
-      "id": "7d5ecb3a0520",
-      "title": "Fav product",
-      "body": "Obsessed with this AM mix. Not only does it have a delicious coffee flavor, but includes ingredients that i’ve been looking for in a supplement like lions mane, b12, yerba mate etc. Perfect for when you don’t want that second cup of coffee in afternoon. love love !",
-      "rating": 5,
-      "name": "Nicole",
-      "date": "2024-01-04",
-      "verified": false,
       "incentivized": false
     },
     {
