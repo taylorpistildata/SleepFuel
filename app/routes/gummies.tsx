@@ -57,7 +57,8 @@ const HERO_IMAGES_QUERY = `#graphql
   }
 ` as const;
 
-export async function loader({context}: Route.LoaderArgs) {
+export async function loader({context, request}: Route.LoaderArgs) {
+  const angle = angleFromUrl(request.url);
   let heroImages: HeroImage[] = [];
   try {
     const {product} = await context.storefront.query<{
@@ -72,20 +73,25 @@ export async function loader({context}: Route.LoaderArgs) {
     // Non critical: the hero falls back to its bundled image.
   }
 
-  return {heroImages, variantInfo: await fetchVariantData(context.storefront)};
+  return {
+    angle,
+    heroImages,
+    variantInfo: await fetchVariantData(context.storefront),
+  };
 }
 
 export default function GummiesPage() {
-  const {heroImages, variantInfo} = useLoaderData<typeof loader>();
+  const {angle, heroImages, variantInfo} = useLoaderData<typeof loader>();
   const {packKey, mode} = usePurchaseState();
+  const copy = ANGLES[angle];
 
   return (
     <>
       <Hero
         heroImages={heroImages}
         variantInfo={variantInfo}
-        heading="Put down the gummy."
-        tagline="A 2 mg melatonin drink mix with magnesium, L-theanine and GABA. Zero sugar, every dose on the label, and no morning fog."
+        heading={copy.heading}
+        tagline={copy.tagline}
         sizeLegend="Choose your size"
         ctaPrefix="Add to Cart —"
         badgeOne="Free US shipping $50+"
@@ -98,8 +104,8 @@ export default function GummiesPage() {
 
       <CompetitorSection
         eyebrow="Drink mix vs gummies"
-        heading="Why we didn’t make a gummy."
-        intro="Most melatonin gummies are candy built around one ingredient, often at a high dose. Here’s how a SleepFuel stick compares."
+        heading={copy.compareHeading}
+        intro={copy.compareIntro}
         ourLabel="SleepFuel"
         theirLabel="Typical melatonin gummies"
       >
@@ -129,6 +135,8 @@ export default function GummiesPage() {
           ))}
         </ol>
       </div>
+
+      <MagnesiumGummyCallout />
 
       <FeatureCallouts>
         {REASONS.map((reason) => (
@@ -192,6 +200,95 @@ export default function GummiesPage() {
     </>
   );
 }
+
+/* ============================================================
+   Ad angles: one page, a hero per winning ad
+   ============================================================ */
+
+/**
+ * Point each ad at the matching angle, e.g. /gummies?angle=magnesium, so the
+ * first thing a shopper reads repeats the hook they clicked. Anything else,
+ * including no parameter, gets the default melatonin gummy version.
+ */
+type Angle = 'melatonin' | 'magnesium' | 'wakeup';
+
+const ANGLES: Record<
+  Angle,
+  {heading: string; tagline: string; compareHeading: string; compareIntro: string}
+> = {
+  melatonin: {
+    heading: 'Put down the gummy.',
+    tagline:
+      'A 2 mg melatonin drink mix with magnesium, L-theanine and GABA. Zero sugar, every dose on the label, and no morning fog.',
+    compareHeading: 'Why we didn’t make a gummy.',
+    compareIntro:
+      'Most melatonin gummies are candy built around one ingredient, often at a high dose. Here’s how a SleepFuel stick compares.',
+  },
+  magnesium: {
+    heading: 'Your magnesium gummy is half a routine.',
+    tagline:
+      '200 mg of magnesium glycinate in one stick, plus L-theanine, GABA, lemon balm and a 2 mg micro-dose of melatonin. Zero sugar.',
+    compareHeading: 'One stick, not a handful of gummies.',
+    compareIntro:
+      'Gummies are small, so most sleep gummies carry one or two ingredients. Here’s what fits in a SleepFuel stick instead.',
+  },
+  wakeup: {
+    heading: 'Wake up clear, not foggy.',
+    tagline:
+      'Most sleep gummies lean on high dose melatonin. SleepFuel uses 2 mg, plus magnesium, L-theanine and GABA to help you wind down. Zero sugar.',
+    compareHeading: 'Less melatonin. More of what helps.',
+    compareIntro:
+      'High dose melatonin is where most next day grogginess comes from. Here’s how a SleepFuel stick compares with a typical gummy.',
+  },
+};
+
+function angleFromUrl(url: string): Angle {
+  const value = new URL(url).searchParams.get('angle')?.toLowerCase();
+  return value === 'magnesium' || value === 'wakeup' ? value : 'melatonin';
+}
+
+/** For shoppers coming from magnesium gummies, the other winning ad. */
+function MagnesiumGummyCallout() {
+  return (
+    <section className="mx-auto max-w-7xl px-5 pt-12 sm:px-6 lg:px-8 lg:pt-16">
+      <div className="rounded-3xl border border-[color:var(--color-border)] p-8 sm:p-10 lg:p-12">
+        <p className="text-sm font-medium uppercase tracking-wide text-[color:var(--color-muted)]">
+          Already taking a magnesium gummy?
+        </p>
+        <h2 className="mt-2 max-w-2xl text-[30px] font-normal leading-[1.1] tracking-tight sm:text-[40px]">
+          Keep the magnesium. Drop the gummy.
+        </h2>
+        <div className="mt-8 grid gap-8 md:grid-cols-3">
+          {MAGNESIUM_POINTS.map((point) => (
+            <div key={point.title}>
+              <h3 className="text-lg font-medium text-[color:var(--color-ink)]">
+                {point.title}
+              </h3>
+              <p className="mt-2 leading-relaxed text-[color:var(--color-muted)]">
+                {point.copy}
+              </p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+const MAGNESIUM_POINTS = [
+  {
+    title: 'Check your label',
+    copy: 'Many magnesium gummies list their dose per two or more gummies. One SleepFuel stick has 200 mg of magnesium glycinate, a gentle, well tolerated form.',
+  },
+  {
+    title: 'Magnesium plus a full formula',
+    copy: 'Each stick adds L-theanine, GABA, inositol and lemon balm to help quiet a busy mind, and a 2 mg micro-dose of melatonin to cue sleep.',
+  },
+  {
+    title: 'Don’t double up',
+    copy: 'If you switch, stop your magnesium gummy rather than taking both, so you stay within the usual daily supplement amount.',
+  },
+];
 
 /* ============================================================
    Comparison: claims about gummies stay general or are sourced
@@ -269,6 +366,10 @@ const FAQS: Array<{q: string; a: string}> = [
   {
     q: 'I already take melatonin gummies. Can I switch?',
     a: 'Yes. Stop the gummies and take one SleepFuel stick in 6 to 8 oz of water about 30 minutes before bed instead. Don’t take both on the same night. If you take prescription sleep medication, check with your doctor before changing your routine.',
+  },
+  {
+    q: 'I take a magnesium gummy. Should I keep taking it?',
+    a: 'Each SleepFuel stick already has 200 mg of magnesium glycinate, so stop the magnesium gummy rather than taking both. If you take magnesium for a specific medical reason, check with your doctor first.',
   },
   {
     q: 'Is 2 mg of melatonin enough if I’m used to 5 or 10?',
