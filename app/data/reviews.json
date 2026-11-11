@@ -1,6 +1,7 @@
 {
   "source": "Okendo export sleepfuel_calm_sleep_demo_reviews.xlsx (2026-09-16); filtered 2026-11-11 to SleepFuel drink mix reviews only (templated, duplicate and other product reviews removed)",
-  "total": 22,
+  "totalSource": "Total and average provided by store owner (Taylor Jones) on 2026-11-11 as the full drink mix review count.",
+  "total": 343,
   "average": 4.68,
   "distribution": {
     "5": 15,
