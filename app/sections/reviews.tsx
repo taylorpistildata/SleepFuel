@@ -126,7 +126,6 @@ function ReviewCard({review}: {review: Review}) {
             Verified buyer
           </span>
         )}
-        {review.incentivized && <span>Incentivized review</span>}
         <span className="ml-auto tabular-nums">{review.date}</span>
       </div>
     </article>
