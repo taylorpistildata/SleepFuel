@@ -6,6 +6,7 @@ import {
 import {AddToCartButton} from '~/components/AddToCartButton';
 import {useAside} from '~/components/Aside';
 import {
+  DEFAULT_PACK_KEY,
   VARIANTS,
   formatPrice,
   priceFrom,
@@ -26,12 +27,12 @@ type Props = {
  * Oura-style sticky add-to-cart bar: a frosted, slightly transparent
  * rounded bar pinned to the bottom. Product thumbnail + name + variant on
  * the left; price + blue Add to Cart button on the right. Defaults to the
- * 10-pack subscribe-and-save per the brief. Reveals after the hero scrolls
+ * 30-pack subscribe-and-save. Reveals after the hero scrolls
  * out of view.
  */
 export function StickyAddToCart({
   image = null,
-  packKey = 'pack10',
+  packKey = DEFAULT_PACK_KEY,
   mode = 'subscribe',
   variantInfo = FALLBACK_VARIANT_INFO,
 }: Props) {

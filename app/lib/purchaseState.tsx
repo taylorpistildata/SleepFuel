@@ -1,5 +1,9 @@
 import {createContext, useContext, useMemo, useState} from 'react';
-import {type PackKey, type PurchaseMode} from '~/lib/sleepfuelProduct';
+import {
+  DEFAULT_PACK_KEY,
+  type PackKey,
+  type PurchaseMode,
+} from '~/lib/sleepfuelProduct';
 
 type PurchaseState = {
   packKey: PackKey;
@@ -19,7 +23,7 @@ const PurchaseStateContext = createContext<PurchaseState | null>(null);
  * `packKey` as a prop from a sibling.
  */
 export function PurchaseStateProvider({children}: {children: React.ReactNode}) {
-  const [packKey, setPackKey] = useState<PackKey>('pack10');
+  const [packKey, setPackKey] = useState<PackKey>(DEFAULT_PACK_KEY);
   const [mode, setMode] = useState<PurchaseMode>('subscribe');
 
   const value = useMemo(
@@ -44,7 +48,7 @@ export function usePurchaseState(): PurchaseState {
 
   if (!ctx) {
     return {
-      packKey: 'pack10',
+      packKey: DEFAULT_PACK_KEY,
       setPackKey: () => {},
       mode: 'subscribe',
       setMode: () => {},

@@ -64,6 +64,9 @@ export const PACK_ORDER: PackKey[] = ['pack10', 'pack20', 'pack30'];
  */
 export const BEST_VALUE_KEY: PackKey = 'pack30';
 
+/** Tier selected when the page first loads. */
+export const DEFAULT_PACK_KEY: PackKey = 'pack30';
+
 /**
  * Shopify Subscriptions selling plan GIDs — one per product. Empty until the
  * selling plans are created in the Shopify admin. Fill in like:
