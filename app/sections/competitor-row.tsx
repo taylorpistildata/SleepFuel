@@ -19,7 +19,7 @@ const CompetitorRow = forwardRef<HTMLTableRowElement, CompetitorRowProps>(
         >
           {label}
         </th>
-        <td className="border-t border-white/15 px-2 py-3 text-center font-semibold text-white sm:px-3 sm:py-4">
+        <td className="border-t border-white/15 px-2 py-3 text-center font-semibold text-white [text-shadow:0_1px_3px_rgba(0,0,0,0.55)] sm:px-3 sm:py-4">
           {sleepfuel}
         </td>
         <td className="border-t border-[color:var(--color-border)] px-2 py-3 text-center text-[color:var(--color-muted)] sm:px-3 sm:py-4">

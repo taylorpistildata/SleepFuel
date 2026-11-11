@@ -19,7 +19,6 @@ import {PRODUCT, VARIANTS, priceFrom} from '~/lib/sleepfuelProduct';
 import {fetchVariantData} from '~/lib/variantData';
 import featureCounterImage from '~/assets/feature-counter.jpg';
 import featureBerriesImage from '~/assets/feature-berries.jpg';
-import featureWakeImage from '~/assets/feature-wake.jpg';
 
 /**
  * /gummies: ad landing page comparing SleepFuel drink mix with melatonin
@@ -334,13 +333,17 @@ const FOOTNOTES = [
    Three reasons, reusing the product page photography
    ============================================================ */
 
+const WAKE_UP_CLEAR_IMAGE =
+  'https://cdn.shopify.com/s/files/1/0725/6706/2614/files/sleepfuel-wake-up-clear.jpg?v=1789586135';
+
 const REASONS = [
   {
     eyebrow: 'Less melatonin',
     title: 'More isn’t better',
     copy: 'Research suggests doses close to what your body makes are enough to support sleep onset. We use 2 mg, not 10, so you wake up clear instead of foggy.',
-    image: featureWakeImage as unknown as string,
-    alt: 'A woman waking up rested in lavender pajamas beside a glass of water',
+    // Same photo the product page uses for "Wake up clear" (set in Weaverse).
+    image: WAKE_UP_CLEAR_IMAGE,
+    alt: 'A woman stretching at a sunlit window in the morning',
   },
   {
     eyebrow: 'Room for what works',

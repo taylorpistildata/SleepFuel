@@ -108,7 +108,7 @@ export const themeSchema: HydrogenThemeSchema = {
           name: 'footerNewsletterHeading',
           label: 'Newsletter heading',
           defaultValue:
-            'Get sleep tips, science, offers, and 15% off your first order.',
+            'Get sleep tips, science, offers, and 10% off your first order.',
         },
         {
           type: 'text',
