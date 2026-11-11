@@ -68,7 +68,7 @@ export function Footer(_props: FooterProps) {
   // constants above remain the shipped defaults until a merchant saves.
   const newsletterHeading = useThemeSetting(
     'footerNewsletterHeading',
-    'Get sleep tips, science, offers, and 15% off your first order.',
+    'Get sleep tips, science, offers, and 10% off your first order.',
   );
   const disclaimer = useThemeSetting('footerDisclaimer', FDA_DISCLAIMER);
   const supportHeading = useThemeSetting('footerSupportHeading', 'Support');

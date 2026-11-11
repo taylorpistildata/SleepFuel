@@ -2,6 +2,7 @@ import {forwardRef} from 'react';
 import {createSchema, type HydrogenComponentProps} from '@weaverse/hydrogen';
 import formulaImage from '~/assets/formula-glass.jpg';
 import ingredientsVideo from '~/assets/ingredients-video.mp4';
+import {autoplayVideo} from '~/lib/autoplayVideo';
 import {imageUrl, type WeaverseImage} from './shared';
 
 type FormulaScienceProps = Partial<HydrogenComponentProps> & {
@@ -31,6 +32,7 @@ const FormulaScience = forwardRef<HTMLElement, FormulaScienceProps>(
           <div className="mt-12 grid items-start gap-10 lg:mt-16 lg:grid-cols-2 lg:gap-16">
             <div className="overflow-hidden rounded-3xl">
               <video
+                ref={autoplayVideo}
                 src={imageUrl(video ?? null, ingredientsVideo as unknown as string)}
                 poster={imageUrl(poster ?? null, formulaImage as unknown as string)}
                 autoPlay

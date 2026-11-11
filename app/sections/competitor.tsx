@@ -1,6 +1,7 @@
 import {forwardRef} from 'react';
 import {createSchema, type HydrogenComponentProps} from '@weaverse/hydrogen';
 import comparisonBgVideo from '~/assets/comparison-bg.mp4';
+import {autoplayVideo} from '~/lib/autoplayVideo';
 import {imageUrl, type WeaverseImage} from './shared';
 
 type CompetitorSectionProps = Partial<HydrogenComponentProps> & {
@@ -61,7 +62,15 @@ const CompetitorSection = forwardRef<HTMLElement, CompetitorSectionProps>(
               column widths stay percentage-based, so the video tracks them at
               any width. */}
           <div className="relative sm:min-w-[560px]">
+            {/* Solid backing so the white SleepFuel column stays readable
+                while the video loads, or when a phone won't autoplay it
+                (Low Power Mode, data saver). */}
+            <div
+              aria-hidden="true"
+              className="pointer-events-none absolute inset-y-0 left-[34%] z-0 h-full w-[33%] rounded-2xl bg-[#1f2a4a]"
+            />
             <video
+              ref={autoplayVideo}
               src={imageUrl(
                 backgroundVideo ?? null,
                 comparisonBgVideo as unknown as string,
@@ -72,8 +81,8 @@ const CompetitorSection = forwardRef<HTMLElement, CompetitorSectionProps>(
               playsInline
               preload="metadata"
               aria-hidden="true"
-              className="pointer-events-none absolute inset-y-0 left-[34%] z-0 h-full w-[33%] overflow-hidden rounded-2xl object-cover"
-              style={{filter: 'brightness(0.8)'}}
+              className="pointer-events-none absolute inset-y-0 left-[34%] z-0 h-full w-[33%] overflow-hidden rounded-2xl bg-[#1f2a4a] object-cover"
+              style={{filter: 'brightness(0.7)'}}
             />
             <table className="relative z-10 w-full border-separate border-spacing-0 text-xs sm:min-w-[560px] sm:text-sm">
               <colgroup>

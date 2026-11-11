@@ -16,6 +16,7 @@ import {
 } from '~/lib/variantData';
 import heroImage from '~/assets/hero.jpg';
 import heroVideo from '~/assets/hero-video.mp4';
+import {autoplayVideo} from '~/lib/autoplayVideo';
 import {
   BEST_VALUE_KEY,
   PACK_ORDER,
@@ -295,6 +296,7 @@ function HeroVisual({images}: {images: HeroImage[]}) {
         {/* Left: looped hero product video. */}
         <div className="relative h-full overflow-hidden">
           <video
+            ref={autoplayVideo}
             src={heroVideo}
             poster={videoStill}
             autoPlay
