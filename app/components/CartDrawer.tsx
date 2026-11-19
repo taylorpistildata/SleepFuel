@@ -10,6 +10,7 @@ import {
 import type {CartApiQueryFragment} from 'storefrontapi.generated';
 import {useAside} from '~/components/Aside';
 import {useCheckoutStartedPublisher} from '~/components/OpenAiAdsPixel';
+import {isSaleLive} from '~/lib/blackFriday';
 import {
   FREE_SHIPPING_THRESHOLD,
   MERCHANDISE_TO_SELLING_PLAN,
@@ -82,7 +83,10 @@ function CartDrawerBody({
     <DrawerFrame onClose={onClose} count={count}>
       {hasItems ? (
         <>
-          <FreeShippingBar subtotal={subtotal} />
+          <FreeShippingBar
+            subtotal={subtotal}
+            saleFreeShipping={hasSubscription && isSaleLive()}
+          />
           <div className="flex-1 overflow-y-auto px-5">
             <ul className="divide-y divide-[color:var(--color-border)]">
               {lines.map((line) => (
@@ -166,10 +170,22 @@ function DrawerFrame({
   );
 }
 
-function FreeShippingBar({subtotal}: {subtotal: number}) {
-  const unlocked = subtotal >= FREE_SHIPPING_THRESHOLD;
+/**
+ * During the Black Friday sale, subscription orders ship free at any total
+ * (Shopify automatic free shipping discount for subscriptions), so the bar shows unlocked.
+ */
+function FreeShippingBar({
+  subtotal,
+  saleFreeShipping = false,
+}: {
+  subtotal: number;
+  saleFreeShipping?: boolean;
+}) {
+  const unlocked = saleFreeShipping || subtotal >= FREE_SHIPPING_THRESHOLD;
   const remaining = Math.max(FREE_SHIPPING_THRESHOLD - subtotal, 0);
-  const pct = Math.min((subtotal / FREE_SHIPPING_THRESHOLD) * 100, 100);
+  const pct = unlocked
+    ? 100
+    : Math.min((subtotal / FREE_SHIPPING_THRESHOLD) * 100, 100);
 
   return (
     <div className="px-5 pb-1 pt-4">
