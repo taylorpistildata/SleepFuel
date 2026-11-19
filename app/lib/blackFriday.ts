@@ -1,7 +1,7 @@
 import {VARIANTS, priceFrom, sellingPlanFor} from '~/lib/sleepfuelProduct';
 
 /**
- * Black Friday / Cyber Monday 2026 sale, shown on /black-friday.
+ * Black Friday / Cyber Monday 2026 sale, shown on /blackfriday26.
  *
  * The discount itself is a Shopify AUTOMATIC discount (no code): 60% off the
  * first order of the 30 night pack on subscription. Renewals fall back to the

@@ -1,6 +1,6 @@
 import {useEffect, useState} from 'react';
 import {redirect, useLoaderData} from 'react-router';
-import type {Route} from './+types/black-friday';
+import type {Route} from './+types/blackfriday26';
 import {Analytics} from '@shopify/hydrogen';
 import {AddToCartButton} from '~/components/AddToCartButton';
 import {useAside} from '~/components/Aside';
@@ -29,7 +29,7 @@ import heroImage from '~/assets/hero.jpg';
 import heroVideo from '~/assets/hero-video.mp4';
 
 /**
- * /black-friday: the dedicated sale page the Black Friday ads link to.
+ * /blackfriday26: the dedicated sale page the Black Friday ads link to.
  *
  * One offer, no choices: 30 nights on subscription, 60% off the first order
  * through a Shopify automatic discount (no code to type), renewing at the
@@ -48,7 +48,7 @@ export const meta: Route.MetaFunction = () => [
     content:
       'Black Friday: 60% off your first 30 nights of SleepFuel when you subscribe. About $1 a night. Zero sugar, 2 mg melatonin, 200 mg magnesium glycinate.',
   },
-  {rel: 'canonical', href: '/black-friday'},
+  {rel: 'canonical', href: '/blackfriday26'},
 ];
 
 const HERO_IMAGES_QUERY = `#graphql

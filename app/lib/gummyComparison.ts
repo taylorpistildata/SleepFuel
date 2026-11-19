@@ -1,5 +1,5 @@
 /**
- * Drink mix vs gummies comparison, shared by /gummies and /black-friday.
+ * Drink mix vs gummies comparison, shared by /gummies and /blackfriday26.
  * Claims about gummies stay general or are sourced in FOOTNOTES.
  */
 
