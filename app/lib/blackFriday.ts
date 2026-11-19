@@ -24,7 +24,7 @@ export const SALE_PACK = 'pack30' as const;
  * when the automatic discount isn't running. Match these to the discount's
  * start and end in Shopify. Add ?preview=1 to view the page outside the window.
  */
-export const SALE_START = new Date('2026-11-20T00:00:00-06:00');
+export const SALE_START = new Date('2026-11-19T00:00:00-06:00'); // discount already running
 export const SALE_END = new Date('2026-12-02T00:00:00-06:00'); // through Dec 1
 
 export const SALE_END_LABEL = 'Dec 1';
@@ -35,11 +35,15 @@ export function isSaleLive(now: Date = new Date()) {
 
 /**
  * Prices for the sale offer from the live one time price of the 30 night pack.
- * Rounds to cents the way a Shopify percentage discount does.
+ *
+ * Shopify applies the 60% automatic discount on top of the 15% Subscribe &
+ * Save price, so the first order is 60% off the subscription price
+ * ($63.74 to $25.50 at $74.99 base). Verified against a live cart on
+ * 2026-11-19. Rounds to cents the way a Shopify percentage discount does.
  */
 export function salePricing(base: number) {
-  const first = Math.round(base * (1 - SALE_DISCOUNT) * 100) / 100;
   const renewal = Math.round(priceFrom(base, 'subscribe').final * 100) / 100;
+  const first = Math.round(renewal * (1 - SALE_DISCOUNT) * 100) / 100;
   const nights = VARIANTS[SALE_PACK].servings;
   return {
     base,
