@@ -46,7 +46,7 @@ export const meta: Route.MetaFunction = () => [
   {
     name: 'description',
     content:
-      'Black Friday: 60% off your first order of SleepFuel when you subscribe, about $1 a night for your first 30 nights. Zero sugar, 2 mg melatonin, 200 mg magnesium glycinate.',
+      'Black Friday: 60% off your first order of SleepFuel when you subscribe, less than $1 a night for your first 30 nights. Zero sugar, 2 mg melatonin, 200 mg magnesium glycinate.',
   },
   {rel: 'canonical', href: '/blackfriday26'},
 ];
@@ -250,7 +250,7 @@ function SaleHero({
             Black Friday Sale · Ends {SALE_END_LABEL}
           </p>
           <h1 className="mt-3 text-[48px] font-normal leading-[1.05] tracking-tight sm:text-[64px]">
-            Your first 30 nights for {formatPrice(pricing.perNight)} a night.
+            Your first 30 nights for less than $1 a night.
           </h1>
           <p className="mt-4 text-lg leading-relaxed text-[color:var(--color-muted)]">
             Swap the sugary gummy for one stick of mixed berry SleepFuel. 2 mg
@@ -440,7 +440,7 @@ function FinalCta({available, pricing}: {available: boolean; pricing: Pricing}) 
           Black Friday · Ends {SALE_END_LABEL}
         </p>
         <h2 className="mx-auto mt-3 max-w-2xl text-[34px] font-normal leading-[1.1] tracking-tight text-white sm:text-[48px]">
-          Put down the gummy. 60% off your first order.
+          Put down the gummy. Less than $1 a night.
         </h2>
         <div className="mx-auto mt-8 max-w-sm">
           <SaleButton
