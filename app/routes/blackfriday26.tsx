@@ -46,7 +46,7 @@ export const meta: Route.MetaFunction = () => [
   {
     name: 'description',
     content:
-      'Black Friday: 60% off your first 30 nights of SleepFuel when you subscribe. About $1 a night. Zero sugar, 2 mg melatonin, 200 mg magnesium glycinate.',
+      'Black Friday: 60% off your first order of SleepFuel when you subscribe, about $1 a night for your first 30 nights. Zero sugar, 2 mg melatonin, 200 mg magnesium glycinate.',
   },
   {rel: 'canonical', href: '/blackfriday26'},
 ];
@@ -250,7 +250,7 @@ function SaleHero({
             Black Friday Sale · Ends {SALE_END_LABEL}
           </p>
           <h1 className="mt-3 text-[48px] font-normal leading-[1.05] tracking-tight sm:text-[64px]">
-            Better sleep for {formatPrice(pricing.perNight)} a night.
+            Your first 30 nights for {formatPrice(pricing.perNight)} a night.
           </h1>
           <p className="mt-4 text-lg leading-relaxed text-[color:var(--color-muted)]">
             Swap the sugary gummy for one stick of mixed berry SleepFuel. 2 mg
@@ -301,7 +301,7 @@ function OfferCard({pricing}: {pricing: Pricing}) {
             </span>
           </div>
           <p className="mt-1 text-sm text-[color:var(--color-muted)]">
-            Subscribe & Save · delivered every 4 weeks
+            First order price · Subscribe & Save
           </p>
         </div>
         <div className="text-right">
@@ -312,7 +312,7 @@ function OfferCard({pricing}: {pricing: Pricing}) {
             {formatPrice(pricing.first)}
           </span>
           <span className="block text-xs text-[color:var(--color-muted)]">
-            {formatPrice(pricing.perNight)}/night
+            {formatPrice(pricing.perNight)}/night first order
           </span>
         </div>
       </div>
@@ -403,7 +403,7 @@ function SaleButton({
 
 function OfferStrip({pricing}: {pricing: Pricing}) {
   const items = [
-    {big: '60% off', small: 'your first 30 nights'},
+    {big: '60% off', small: 'your first order'},
     {big: `${formatPrice(pricing.perNight)}/night`, small: 'one stick before bed'},
     {big: '0 g sugar', small: 'unlike most sleep gummies'},
     {big: 'Cancel anytime', small: 'skip or pause in two clicks'},
@@ -437,7 +437,7 @@ function FinalCta({available, pricing}: {available: boolean; pricing: Pricing}) 
           Black Friday · Ends {SALE_END_LABEL}
         </p>
         <h2 className="mx-auto mt-3 max-w-2xl text-[34px] font-normal leading-[1.1] tracking-tight text-white sm:text-[48px]">
-          Put down the gummy. 60% off your first 30 nights.
+          Put down the gummy. 60% off your first order.
         </h2>
         <div className="mx-auto mt-8 max-w-sm">
           <SaleButton
@@ -494,7 +494,7 @@ function SaleStickyBar({
         >
           <div className="min-w-0">
             <div className="truncate text-sm font-semibold text-[color:var(--color-ink)]">
-              Black Friday: 60% off
+              Black Friday: 60% off first order
             </div>
             <div className="truncate text-xs text-[color:var(--color-muted)]">
               30 nights ·{' '}
