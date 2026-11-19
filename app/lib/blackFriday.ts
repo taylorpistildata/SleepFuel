@@ -5,7 +5,9 @@ import {VARIANTS, priceFrom, sellingPlanFor} from '~/lib/sleepfuelProduct';
  *
  * The discount itself is a Shopify AUTOMATIC discount (no code): 60% off the
  * first order of the 30 night pack on subscription. Renewals fall back to the
- * normal Subscribe & Save selling plan (15% off). This file only describes
+ * normal Subscribe & Save selling plan (15% off). Shipping on subscription
+ * orders is free during the sale through a second Shopify automatic discount
+ * (free shipping, subscriptions only, same dates). This file only describes
  * the offer for the page; Shopify decides what checkout charges, so keep
  * these numbers in step with the discount in the admin.
  */

@@ -194,7 +194,7 @@ export default function BlackFridayPage() {
 function SaleBanner() {
   return (
     <div className="bg-[color:var(--color-blue)] px-5 py-3 text-center text-sm font-medium text-white sm:text-base">
-      Black Friday Sale: 60% off your first 30 nights when you subscribe. Ends{' '}
+      Black Friday Sale: 60% off your first 30 nights when you subscribe, plus free shipping. Ends{' '}
       {SALE_END_LABEL}.
     </div>
   );
@@ -318,6 +318,9 @@ function OfferCard({pricing}: {pricing: Pricing}) {
       </div>
       <ul className="mt-4 space-y-1.5 border-t border-[color:var(--color-border)] pt-4 text-sm">
         <li className="flex items-center gap-2">
+          <Check /> Free shipping
+        </li>
+        <li className="flex items-center gap-2">
           <Check /> Discount applied automatically at checkout
         </li>
         <li className="flex items-center gap-2">
@@ -405,7 +408,7 @@ function OfferStrip({pricing}: {pricing: Pricing}) {
   const items = [
     {big: '60% off', small: 'your first order'},
     {big: `${formatPrice(pricing.perNight)}/night`, small: 'one stick before bed'},
-    {big: '0 g sugar', small: 'unlike most sleep gummies'},
+    {big: 'Free shipping', small: 'on your sale order'},
     {big: 'Cancel anytime', small: 'skip or pause in two clicks'},
   ];
   return (
@@ -524,7 +527,7 @@ function saleFaqs(pricing: Pricing): Array<{q: string; a: string}> {
   return [
     {
       q: 'How does the Black Friday deal work?',
-      a: `Subscribe to the 30 night supply and your first order is 60% off: ${formatPrice(pricing.first)} instead of ${formatPrice(pricing.base)}. The discount is applied automatically at checkout, no code needed.`,
+      a: `Subscribe to the 30 night supply and your first order is 60% off: ${formatPrice(pricing.first)} instead of ${formatPrice(pricing.base)}. Shipping is free, and the discount is applied automatically at checkout, no code needed.`,
     },
     {
       q: 'What happens after my first order?',
