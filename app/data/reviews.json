@@ -4,14 +4,14 @@
   "total": 343,
   "average": 4.68,
   "distribution": {
-    "5": 15,
+    "5": 13,
     "4": 7,
     "3": 0,
     "2": 0,
     "1": 0
   },
   "incentivizedCount": 12,
-  "verifiedCount": 15,
+  "verifiedCount": 14,
   "reviews": [
     {
       "id": "d5a72da3fb3b",
@@ -164,16 +164,6 @@
       "incentivized": false
     },
     {
-      "id": "497498bbf286",
-      "title": "Sleep fuels leaves me refreshed and ready to go!",
-      "body": "I have always had trouble sleeping but Sleep Fuel really helps me fall asleep, stay asleep, and wake up feeling rested. Shipping was fast and painless. I was impressed by the quality and informativeness of the packaging. Mixing was easy and I was pleasantly surprised by the taste (minty without being overpowering). I began to feel the effects about 15 minutes later and slept like a log! I've been using sleep fuel for about a month and Sleep Fuel is just as effective now as it was the first day I tried it. Huge fan of this product and would highly recommend it to anyone on the fence.",
-      "rating": 5,
-      "name": "Glenn M.",
-      "date": "2026-10-30",
-      "verified": false,
-      "incentivized": false
-    },
-    {
       "id": "5df220ac309b",
       "title": "Best sleep of my life!",
       "body": "This product has changed my nights for the better. I used to toss and turn every night to fall asleep and then wake up several times throughout. The mornings were awful leaving me with little motivation to conquer the day. After using SleepFuel, I fall asleep and stay asleep the entire night. My mental health has improved so much from getting the much needed sleep I was lacking. I wake up so refreshed and ready to take on the day! No more chewing countless melatonin drink mix hoping they’d work this time. Now I simply mix a few servings and drift away to sweet dreams. This product is a game changer. I’ll be a customer for life!",
@@ -181,16 +171,6 @@
       "name": "Jessica P.",
       "date": "2026-10-29",
       "verified": false,
-      "incentivized": false
-    },
-    {
-      "id": "555f1be2a276",
-      "title": "SleepFuel. PM mix",
-      "body": "If anyone knows me they know I am skeptical about trying any products to use in my body. SleepFuel has changed my life! I am able to fall asleep within a few minutes and get the best solid sleep I have ever had. It is easy to use and the fresh mint adds a clean feeling in your mouth at bedtime. I would recommend this product to anyone who is tired of melatonin and feeling groggy in the morning. SleepFuel has me feeling fresh, energized, and ready to tackle a full day of work!",
-      "rating": 5,
-      "name": "Allyson M.",
-      "date": "2026-11-04",
-      "verified": true,
       "incentivized": false
     },
     {
