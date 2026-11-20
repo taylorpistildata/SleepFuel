@@ -3,6 +3,7 @@ import type {Route} from './+types/cart';
 import type {CartQueryDataReturn} from '@shopify/hydrogen';
 import {CartForm} from '@shopify/hydrogen';
 import {CartMain} from '~/components/CartMain';
+import {SALE_MAX_QTY, isSaleLine, isSaleLive} from '~/lib/blackFriday';
 
 export const meta: Route.MetaFunction = () => {
   return [{title: `Hydrogen | Cart`}];
@@ -73,6 +74,17 @@ export async function action({request, context}: Route.ActionArgs) {
       throw new Error(`${action} cart action is not defined`);
   }
 
+  // Black Friday: at most SALE_MAX_QTY of the sale item per cart. Shopify
+  // merges repeat adds into one line, so after any add or update, clamp the
+  // sale line back to the limit and drop extra sale lines.
+  if (
+    isSaleLive() &&
+    (action === CartForm.ACTIONS.LinesAdd ||
+      action === CartForm.ACTIONS.LinesUpdate)
+  ) {
+    result = await enforceSaleLimit(cart, result);
+  }
+
   const cartId = result?.cart?.id;
   const headers = cartId ? cart.setCartId(result.cart.id) : new Headers();
   const {cart: cartResult, errors, warnings} = result;
@@ -110,4 +122,33 @@ export default function Cart() {
       <CartMain layout="page" cart={cart} />
     </div>
   );
+}
+
+type CartHandler = Route.ActionArgs['context']['cart'];
+
+async function enforceSaleLimit(
+  cart: CartHandler,
+  result: CartQueryDataReturn,
+): Promise<CartQueryDataReturn> {
+  const current = await cart.get();
+  const saleLines = (current?.lines?.nodes ?? []).filter(isSaleLine);
+  const total = saleLines.reduce((sum, line) => sum + line.quantity, 0);
+  if (total <= SALE_MAX_QTY) return result;
+
+  const [keep, ...extra] = saleLines;
+  if (extra.length) {
+    await cart.removeLines(extra.map((line) => line.id));
+  }
+  const fixed = await cart.updateLines([{id: keep.id, quantity: SALE_MAX_QTY}]);
+  return {
+    ...fixed,
+    warnings: [
+      ...(fixed.warnings ?? []),
+      {
+        code: 'MERCHANDISE_NOT_ENOUGH_STOCK',
+        message: `The Black Friday offer is limited to ${SALE_MAX_QTY} per customer.`,
+        target: keep.id,
+      },
+    ] as CartQueryDataReturn['warnings'],
+  };
 }

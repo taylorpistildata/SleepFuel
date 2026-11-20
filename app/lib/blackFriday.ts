@@ -63,3 +63,30 @@ export function saleCartLine() {
     ...(sellingPlanId ? {sellingPlanId} : {}),
   };
 }
+
+/**
+ * Most units of the sale item (30 night subscription) one cart can hold
+ * while the sale is live. Enforced in the /cart action and the cart UIs.
+ */
+export const SALE_MAX_QTY = 1;
+
+type CartLineLike = {
+  id?: string;
+  quantity?: number;
+  merchandise?: {id?: string | null} | null;
+  sellingPlanAllocation?: {sellingPlan?: {id?: string | null} | null} | null;
+};
+
+/** True for a cart line that is the sale item: 30 night pack on subscription. */
+export function isSaleLine(line: CartLineLike | null | undefined) {
+  return (
+    !!line &&
+    line.merchandise?.id === VARIANTS[SALE_PACK].merchandiseId &&
+    !!line.sellingPlanAllocation?.sellingPlan?.id
+  );
+}
+
+/** Quantity limit applies only while the sale is live. */
+export function isSaleQtyLimited(line: CartLineLike | null | undefined) {
+  return isSaleLive() && isSaleLine(line);
+}
