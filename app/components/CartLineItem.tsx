@@ -9,6 +9,7 @@ import type {
   CartApiQueryFragment,
   CartLineFragment,
 } from 'storefrontapi.generated';
+import {SALE_MAX_QTY, isSaleQtyLimited} from '~/lib/blackFriday';
 
 export type CartLine = OptimisticCartLine<CartApiQueryFragment>;
 
@@ -105,6 +106,16 @@ export function CartLineItem({
 function CartLineQuantity({line}: {line: CartLine}) {
   if (!line || typeof line?.quantity === 'undefined') return null;
   const {id: lineId, quantity, isOptimistic} = line;
+  if (isSaleQtyLimited(line)) {
+    return (
+      <div className="cart-line-quantity">
+        <small>
+          Quantity: {quantity} (Black Friday offer: limit {SALE_MAX_QTY} per
+          customer)
+        </small>
+      </div>
+    );
+  }
   const prevQuantity = Number(Math.max(0, quantity - 1).toFixed(0));
   const nextQuantity = Number((quantity + 1).toFixed(0));
 

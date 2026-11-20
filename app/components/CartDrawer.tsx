@@ -10,7 +10,7 @@ import {
 import type {CartApiQueryFragment} from 'storefrontapi.generated';
 import {useAside} from '~/components/Aside';
 import {useCheckoutStartedPublisher} from '~/components/OpenAiAdsPixel';
-import {isSaleLive} from '~/lib/blackFriday';
+import {SALE_MAX_QTY, isSaleLive, isSaleQtyLimited} from '~/lib/blackFriday';
 import {
   FREE_SHIPPING_THRESHOLD,
   MERCHANDISE_TO_SELLING_PLAN,
@@ -50,7 +50,11 @@ export function CartDrawer({
       aria-modal="true"
       aria-label="Your cart"
     >
-      <button className="sf-cart-scrim" aria-label="Close cart" onClick={close} />
+      <button
+        className="sf-cart-scrim"
+        aria-label="Close cart"
+        onClick={close}
+      />
       <div className="sf-cart-panel">
         <Suspense fallback={<DrawerFrame onClose={close} count={null} />}>
           <Await resolve={cart}>
@@ -156,7 +160,14 @@ function DrawerFrame({
           aria-label="Close cart"
           className="inline-flex h-9 w-9 items-center justify-center rounded-full text-[color:var(--color-ink)] hover:bg-[color:var(--color-neutral)]"
         >
-          <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="1.6">
+          <svg
+            width="18"
+            height="18"
+            viewBox="0 0 18 18"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.6"
+          >
             <path d="M4 4l10 10M14 4L4 14" strokeLinecap="round" />
           </svg>
         </button>
@@ -197,8 +208,8 @@ function FreeShippingBar({
           </>
         ) : (
           <>
-            You&rsquo;re{' '}
-            <strong>{formatPrice(remaining)}</strong> away from free shipping
+            You&rsquo;re <strong>{formatPrice(remaining)}</strong> away from
+            free shipping
           </>
         )}
       </p>
@@ -216,8 +227,7 @@ function SubscribeUpsell({lines}: {lines: DrawerLine[]}) {
   const updates = lines
     .filter((line) => !line.sellingPlanAllocation?.sellingPlan?.id)
     .map((line) => {
-      const sellingPlanId =
-        MERCHANDISE_TO_SELLING_PLAN[line.merchandise.id];
+      const sellingPlanId = MERCHANDISE_TO_SELLING_PLAN[line.merchandise.id];
       if (!sellingPlanId) return null;
       return {
         id: line.id,
@@ -238,9 +248,23 @@ function SubscribeUpsell({lines}: {lines: DrawerLine[]}) {
           style={{background: 'var(--color-blue)'}}
           aria-hidden="true"
         >
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.8">
-            <path d="M2 8a6 6 0 019.6-4.8M14 8a6 6 0 01-9.6 4.8" strokeLinecap="round" />
-            <path d="M11.5 1.5v2h-2M4.5 14.5v-2h2" strokeLinecap="round" strokeLinejoin="round" />
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 16 16"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.8"
+          >
+            <path
+              d="M2 8a6 6 0 019.6-4.8M14 8a6 6 0 01-9.6 4.8"
+              strokeLinecap="round"
+            />
+            <path
+              d="M11.5 1.5v2h-2M4.5 14.5v-2h2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
           </svg>
         </span>
         <div className="min-w-0">
@@ -353,6 +377,13 @@ function DrawerLineItem({
 
 function QuantityStepper({line}: {line: DrawerLine}) {
   const {id, quantity, isOptimistic} = line;
+  if (isSaleQtyLimited(line)) {
+    return (
+      <span className="text-xs text-[color:var(--color-muted)]">
+        Black Friday offer: limit {SALE_MAX_QTY} per customer
+      </span>
+    );
+  }
   const prev = Math.max(1, quantity - 1);
   const next = quantity + 1;
 
@@ -438,8 +469,19 @@ function EmptyCart({onClose}: {onClose: () => void}) {
         style={{background: 'var(--color-neutral)'}}
         aria-hidden="true"
       >
-        <svg width="26" height="26" viewBox="0 0 20 20" fill="none" stroke="var(--color-ink)" strokeWidth="1.5">
-          <path d="M3 5h2l2 9h9l2-7H6" strokeLinecap="round" strokeLinejoin="round" />
+        <svg
+          width="26"
+          height="26"
+          viewBox="0 0 20 20"
+          fill="none"
+          stroke="var(--color-ink)"
+          strokeWidth="1.5"
+        >
+          <path
+            d="M3 5h2l2 9h9l2-7H6"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
           <circle cx="8" cy="17" r="1" />
           <circle cx="15" cy="17" r="1" />
         </svg>

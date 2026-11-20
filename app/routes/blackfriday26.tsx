@@ -194,8 +194,8 @@ export default function BlackFridayPage() {
 function SaleBanner() {
   return (
     <div className="bg-[color:var(--color-blue)] px-5 py-3 text-center text-sm font-medium text-white sm:text-base">
-      Black Friday Sale: 60% off your first 30 nights when you subscribe, plus free shipping. Ends{' '}
-      {SALE_END_LABEL}.
+      Black Friday Sale: 60% off your first 30 nights when you subscribe, plus
+      free shipping. Ends {SALE_END_LABEL}.
     </div>
   );
 }
@@ -213,7 +213,7 @@ function SaleHero({
 
   return (
     <section className="grid items-stretch overflow-hidden lg:grid-cols-[1.05fr_1fr]">
-      <div className="relative min-h-[46vh] lg:min-h-[84vh]">
+      <div className="relative h-[40vh] lg:h-auto lg:min-h-[84vh]">
         <div className="absolute inset-0 overflow-hidden rounded-b-[1.75rem] lg:-left-16 lg:rounded-b-none lg:rounded-tr-[2.75rem] lg:rounded-br-[2.75rem]">
           <div className="grid h-full w-full grid-cols-2 gap-1">
             <video
@@ -252,10 +252,32 @@ function SaleHero({
           <h1 className="mt-3 text-[48px] font-normal leading-[1.05] tracking-tight sm:text-[64px]">
             Your first 30 nights for less than $1 a night.
           </h1>
+
+          {/* Mobile: price and buy button right under the headline. */}
+          <div className="mt-5 lg:hidden">
+            <p className="flex items-baseline gap-2">
+              <span className="text-sm text-[color:var(--color-muted)] line-through">
+                {formatPrice(pricing.base)}
+              </span>
+              <span className="text-2xl font-semibold">
+                {formatPrice(pricing.first)}
+              </span>
+              <span className="text-sm text-[color:var(--color-muted)]">
+                {formatPrice(pricing.perNight)}/night first order
+              </span>
+            </p>
+            <SaleButton
+              available={available}
+              pricing={pricing}
+              analyticsType="bf-hero-cta-mobile"
+              className="btn-blue mt-3 w-full px-8 text-base"
+            />
+            <RenewalNote pricing={pricing} className="mt-3 text-center" />
+          </div>
           <p className="mt-4 text-lg leading-relaxed text-[color:var(--color-muted)]">
             Swap the sugary gummy for one stick of mixed berry SleepFuel. 2 mg
-            of melatonin, 200 mg of magnesium glycinate, zero sugar. Our
-            biggest sale ever.
+            of melatonin, 200 mg of magnesium glycinate, zero sugar. Our biggest
+            sale ever.
           </p>
 
           <a
@@ -271,7 +293,7 @@ function SaleHero({
 
           <OfferCard pricing={pricing} />
 
-          <div className="mt-6 flex justify-center">
+          <div className="mt-6 hidden justify-center lg:flex">
             <SaleButton
               available={available}
               pricing={pricing}
@@ -280,7 +302,10 @@ function SaleHero({
             />
           </div>
 
-          <RenewalNote pricing={pricing} className="mt-4 text-center" />
+          <RenewalNote
+            pricing={pricing}
+            className="mt-4 hidden text-center lg:block"
+          />
         </div>
       </div>
     </section>
@@ -293,9 +318,7 @@ function OfferCard({pricing}: {pricing: Pricing}) {
       <div className="flex items-start justify-between gap-4">
         <div>
           <div className="flex items-center gap-2">
-            <strong className="text-base">
-              {pricing.nights} Night Supply
-            </strong>
+            <strong className="text-base">{pricing.nights} Night Supply</strong>
             <span className="rounded-full bg-[color:var(--color-blue)] px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-white">
               60% off
             </span>
@@ -407,7 +430,10 @@ function SaleButton({
 function OfferStrip({pricing}: {pricing: Pricing}) {
   const items = [
     {big: '60% off', small: 'your first order'},
-    {big: `${formatPrice(pricing.perNight)}/night`, small: 'one stick before bed'},
+    {
+      big: `${formatPrice(pricing.perNight)}/night`,
+      small: 'one stick before bed',
+    },
     {big: 'Free shipping', small: 'on your sale order'},
     {big: 'Cancel anytime', small: 'skip or pause in two clicks'},
   ];
@@ -432,7 +458,13 @@ function OfferStrip({pricing}: {pricing: Pricing}) {
   );
 }
 
-function FinalCta({available, pricing}: {available: boolean; pricing: Pricing}) {
+function FinalCta({
+  available,
+  pricing,
+}: {
+  available: boolean;
+  pricing: Pricing;
+}) {
   return (
     <section className="mx-auto max-w-7xl px-5 pb-12 sm:px-6 lg:px-8">
       <div className="rounded-3xl bg-[color:var(--color-midnight)] px-6 py-12 text-center text-white sm:px-12">
@@ -471,7 +503,9 @@ function SaleStickyBar({
 
   useEffect(() => {
     function onScroll() {
-      setVisible(window.scrollY > 700);
+      // Mobile: show as soon as the visitor scrolls. Desktop: after the hero.
+      const threshold = window.innerWidth < 1024 ? 10 : 700;
+      setVisible(window.scrollY > threshold);
     }
     onScroll();
     window.addEventListener('scroll', onScroll, {passive: true});
