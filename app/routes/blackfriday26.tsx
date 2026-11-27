@@ -1,9 +1,10 @@
-import {useEffect, useState} from 'react';
+import {useCallback, useEffect, useState} from 'react';
 import {redirect, useLoaderData} from 'react-router';
 import type {Route} from './+types/blackfriday26';
 import {Analytics} from '@shopify/hydrogen';
 import {AddToCartButton} from '~/components/AddToCartButton';
 import {useAside} from '~/components/Aside';
+import {trackMetaEvent} from '~/components/MetaPixel';
 import {Stars, formatCount} from '~/components/Stars';
 import reviewsData from '~/data/reviews.json';
 import CompetitorSection from '~/sections/competitor';
@@ -17,15 +18,20 @@ import {autoplayVideo} from '~/lib/autoplayVideo';
 import {INGREDIENTS} from '~/lib/sleepfuelIngredients';
 import {COMPARISON_ROWS, FOOTNOTES} from '~/lib/gummyComparison';
 import {PRODUCT, VARIANTS, formatPrice} from '~/lib/sleepfuelProduct';
+import {variantContentId} from '~/lib/openAiPixel';
+import type {MetaEventParams} from '~/lib/metaPixel';
 import {fetchVariantData} from '~/lib/variantData';
 import {
   SALE_END_LABEL,
+  BUY_ONCE_PACK,
   SALE_PACK,
+  buyOnceCartLine,
   isSaleLive,
   saleCartLine,
   salePricing,
 } from '~/lib/blackFriday';
-import heroImage from '~/assets/hero.jpg';
+import heroImage from '~/assets/hero.webp';
+import heroPoster from '~/assets/hero-video-poster.webp';
 import heroVideo from '~/assets/hero-video.mp4';
 
 /**
@@ -92,18 +98,60 @@ export async function loader({context, request}: Route.LoaderArgs) {
     image,
     available: variantInfo[SALE_PACK].available,
     pricing: salePricing(variantInfo[SALE_PACK].price),
+    buyOnce: {
+      price: variantInfo[BUY_ONCE_PACK].price,
+      available: variantInfo[BUY_ONCE_PACK].available,
+    },
   };
 }
 
 type Pricing = ReturnType<typeof salePricing>;
+type BuyOnce = {price: number; available: boolean};
+
+/** Meta ViewContent / AddToCart params for one pack at a given price. */
+function metaParams(
+  pack: typeof SALE_PACK | typeof BUY_ONCE_PACK,
+  value: number,
+): MetaEventParams {
+  const id = variantContentId(VARIANTS[pack].merchandiseId) ?? '';
+  return {
+    content_ids: [id],
+    content_type: 'product',
+    contents: [{id, quantity: 1, item_price: value}],
+    content_name: `${PRODUCT.title} - ${VARIANTS[pack].label}`,
+    value,
+    currency: 'USD',
+  };
+}
+
+/** Shopify CDN image at a given width (served as WebP/AVIF to browsers that take it). */
+function cdnWidth(url: string, width: number) {
+  try {
+    const u = new URL(url);
+    u.searchParams.set('width', String(width));
+    return u.toString();
+  } catch {
+    return url;
+  }
+}
 
 export default function BlackFridayPage() {
-  const {image, available, pricing} = useLoaderData<typeof loader>();
+  const {image, available, pricing, buyOnce} = useLoaderData<typeof loader>();
+
+  // Meta ViewContent for the sale offer, once per visit.
+  useEffect(() => {
+    trackMetaEvent('ViewContent', metaParams(SALE_PACK, pricing.first));
+  }, [pricing.first]);
 
   return (
     <>
       <SaleBanner />
-      <SaleHero image={image} available={available} pricing={pricing} />
+      <SaleHero
+        image={image}
+        available={available}
+        pricing={pricing}
+        buyOnce={buyOnce}
+      />
       <OfferStrip pricing={pricing} />
 
       <CompetitorSection
@@ -166,6 +214,8 @@ export default function BlackFridayPage() {
         ))}
       </FAQSection>
 
+      {/* Room for the always-on sticky bar on phones. */}
+      <div className="h-24 lg:hidden" aria-hidden="true" />
       <SaleStickyBar available={available} pricing={pricing} />
 
       <Analytics.ProductView
@@ -204,12 +254,14 @@ function SaleHero({
   image,
   available,
   pricing,
+  buyOnce,
 }: {
   image: {url: string; altText: string} | null;
   available: boolean;
   pricing: Pricing;
+  buyOnce: BuyOnce;
 }) {
-  const still = image?.url ?? (heroImage as unknown as string);
+  const fallback = heroImage as unknown as string;
 
   return (
     <section className="grid items-stretch overflow-hidden lg:grid-cols-[1.05fr_1fr]">
@@ -219,7 +271,7 @@ function SaleHero({
             <video
               ref={autoplayVideo}
               src={heroVideo}
-              poster={still}
+              poster={heroPoster as unknown as string}
               autoPlay
               muted
               loop
@@ -229,10 +281,17 @@ function SaleHero({
               className="h-full w-full object-cover"
             />
             <img
-              src={still}
+              src={image ? cdnWidth(image.url, 800) : fallback}
+              srcSet={
+                image
+                  ? `${cdnWidth(image.url, 400)} 400w, ${cdnWidth(image.url, 800)} 800w`
+                  : undefined
+              }
+              sizes="(min-width: 1024px) 26vw, 50vw"
               alt={image?.altText || 'SleepFuel drink mix'}
               className="h-full w-full object-cover"
               loading="eager"
+              fetchPriority="high"
             />
           </div>
         </div>
@@ -273,6 +332,7 @@ function SaleHero({
               className="btn-blue mt-3 w-full px-8 text-base"
             />
             <RenewalNote pricing={pricing} className="mt-3 text-center" />
+            <BuyOnceOption buyOnce={buyOnce} className="mt-2" />
           </div>
           <p className="mt-4 text-lg leading-relaxed text-[color:var(--color-muted)]">
             Swap the sugary gummy for one stick of mixed berry SleepFuel. 2 mg
@@ -306,6 +366,7 @@ function SaleHero({
             pricing={pricing}
             className="mt-4 hidden text-center lg:block"
           />
+          <BuyOnceOption buyOnce={buyOnce} className="mt-2 hidden lg:block" />
         </div>
       </div>
     </section>
@@ -390,6 +451,10 @@ function SaleButton({
   label?: string;
 }) {
   const {open} = useAside();
+  const onAdded = useCallback(
+    () => trackMetaEvent('AddToCart', metaParams(SALE_PACK, pricing.first)),
+    [pricing.first],
+  );
 
   if (!available) {
     return (
@@ -408,6 +473,7 @@ function SaleButton({
       analytics={{type: analyticsType, packKey: SALE_PACK, mode: 'subscribe'}}
       lines={[saleCartLine()]}
       onClick={() => open('cart')}
+      onAdded={onAdded}
       className={className}
     >
       {label ?? (
@@ -420,6 +486,44 @@ function SaleButton({
         </>
       )}
     </AddToCartButton>
+  );
+}
+
+/**
+ * Small secondary option for visitors who don't want a subscription:
+ * 10 nights, one time, at the regular price (no sale discount, normal
+ * shipping rules). Subscription stays the default and the main button.
+ */
+function BuyOnceOption({
+  buyOnce,
+  className = '',
+}: {
+  buyOnce: BuyOnce;
+  className?: string;
+}) {
+  const {open} = useAside();
+  const onAdded = useCallback(
+    () => trackMetaEvent('AddToCart', metaParams(BUY_ONCE_PACK, buyOnce.price)),
+    [buyOnce.price],
+  );
+  if (!buyOnce.available) return null;
+  return (
+    <div className={`text-center ${className}`}>
+      <AddToCartButton
+        analytics={{
+          type: 'bf-buy-once',
+          packKey: BUY_ONCE_PACK,
+          mode: 'onetime',
+        }}
+        lines={[buyOnceCartLine()]}
+        onClick={() => open('cart')}
+        onAdded={onAdded}
+        className="cursor-pointer border-0 bg-transparent p-0 text-sm text-[color:var(--color-ink)] underline underline-offset-2 hover:text-[color:var(--color-blue)] disabled:opacity-60"
+      >
+        Or buy once: {VARIANTS[BUY_ONCE_PACK].servings} nights for{' '}
+        {formatPrice(buyOnce.price)}, no subscription
+      </AddToCartButton>
+    </div>
   );
 }
 
@@ -503,9 +607,9 @@ function SaleStickyBar({
 
   useEffect(() => {
     function onScroll() {
-      // Mobile: show as soon as the visitor scrolls. Desktop: after the hero.
-      const threshold = window.innerWidth < 1024 ? 10 : 700;
-      setVisible(window.scrollY > threshold);
+      // Mobile: always on screen, so the button is never below the fold.
+      // Desktop: after the hero.
+      setVisible(window.innerWidth < 1024 || window.scrollY > 700);
     }
     onScroll();
     window.addEventListener('scroll', onScroll, {passive: true});

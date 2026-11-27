@@ -12,10 +12,13 @@ import {VARIANTS, priceFrom, sellingPlanFor} from '~/lib/sleepfuelProduct';
  * these numbers in step with the discount in the admin.
  */
 
+/** URL of the sale page. */
+export const SALE_PATH = '/blackfriday26';
+
 /** 60% off the first subscription order. */
 export const SALE_DISCOUNT = 0.6;
 
-/** The only option on the sale page: 30 nights, subscribe. */
+/** The main offer on the sale page: 30 nights, subscribe. */
 export const SALE_PACK = 'pack30' as const;
 
 /**
@@ -89,4 +92,14 @@ export function isSaleLine(line: CartLineLike | null | undefined) {
 /** Quantity limit applies only while the sale is live. */
 export function isSaleQtyLimited(line: CartLineLike | null | undefined) {
   return isSaleLive() && isSaleLine(line);
+}
+
+/**
+ * Secondary "Or buy once" option: 10 nights, one time, at the regular price.
+ * Not discounted and not capped; normal shipping rules apply.
+ */
+export const BUY_ONCE_PACK = 'pack10' as const;
+
+export function buyOnceCartLine() {
+  return {merchandiseId: VARIANTS[BUY_ONCE_PACK].merchandiseId, quantity: 1};
 }
