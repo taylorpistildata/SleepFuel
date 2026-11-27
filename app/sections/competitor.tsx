@@ -1,7 +1,7 @@
 import {forwardRef} from 'react';
 import {createSchema, type HydrogenComponentProps} from '@weaverse/hydrogen';
 import comparisonBgVideo from '~/assets/comparison-bg.mp4';
-import {autoplayVideo} from '~/lib/autoplayVideo';
+import {lazyAutoplayVideo} from '~/lib/autoplayVideo';
 import {imageUrl, type WeaverseImage} from './shared';
 
 type CompetitorSectionProps = Partial<HydrogenComponentProps> & {
@@ -70,8 +70,8 @@ const CompetitorSection = forwardRef<HTMLElement, CompetitorSectionProps>(
               className="pointer-events-none absolute inset-y-0 left-[34%] z-0 h-full w-[33%] rounded-2xl bg-[#1f2a4a]"
             />
             <video
-              ref={autoplayVideo}
-              src={imageUrl(
+              ref={lazyAutoplayVideo}
+              data-src={imageUrl(
                 backgroundVideo ?? null,
                 comparisonBgVideo as unknown as string,
               )}
@@ -79,7 +79,7 @@ const CompetitorSection = forwardRef<HTMLElement, CompetitorSectionProps>(
               muted
               loop
               playsInline
-              preload="metadata"
+              preload="none"
               aria-hidden="true"
               className="pointer-events-none absolute inset-y-0 left-[34%] z-0 h-full w-[33%] overflow-hidden rounded-2xl bg-[#1f2a4a] object-cover"
               style={{filter: 'brightness(0.7)'}}
@@ -156,7 +156,11 @@ export const schema = createSchema({
           label: 'Their column label',
           defaultValue: 'Others',
         },
-        {type: 'video', name: 'backgroundVideo', label: 'Column background video'},
+        {
+          type: 'video',
+          name: 'backgroundVideo',
+          label: 'Column background video',
+        },
       ],
     },
   ],

@@ -15,6 +15,7 @@ import {
   type MetaEventParams,
   type MetaStorefrontEvent,
 } from '~/lib/metaPixel';
+import {SALE_PATH} from '~/lib/blackFriday';
 
 type Fbq = ((...args: unknown[]) => void) & {
   callMethod?: (...args: unknown[]) => void;
@@ -126,9 +127,11 @@ export function MetaPixel() {
   const subscribed = useRef(false);
   /** Last consent value handed to fbq, so it is only called on change. */
   const consentSent = useRef<boolean | null>(null);
-  const lastPageView = useRef<{path: string | null; url: string; at: number}>(
-    {path: null, url: '', at: 0},
-  );
+  const lastPageView = useRef<{path: string | null; url: string; at: number}>({
+    path: null,
+    url: '',
+    at: 0,
+  });
   /** Path ViewContent was sent for; cleared when the shopper leaves it. */
   const viewContentPath = useRef<string | null>(null);
 
@@ -147,7 +150,10 @@ export function MetaPixel() {
       } else if (consentSent.current !== true) {
         window.fbq?.('consent', 'grant');
       }
-    } else if (window.__sleepfuelMetaPixelInit && consentSent.current !== false) {
+    } else if (
+      window.__sleepfuelMetaPixelInit &&
+      consentSent.current !== false
+    ) {
       window.fbq?.('consent', 'revoke');
     }
     consentSent.current = allowed;
@@ -215,22 +221,23 @@ export function MetaPixel() {
       track('PageView');
     });
 
-    subscribe(
-      'product_viewed',
-      (payload: {url?: string} | undefined) => {
-        const path = urlPath(payload?.url ?? window.location.href);
-        // Once per page visit: changing pack or purchase mode is not a new view.
-        if (path && viewContentPath.current === path) return;
-        const params = mapMetaViewContent(payload as never);
-        if (!params) return;
-        if (!syncConsent()) return;
-        viewContentPath.current = path;
-        track('ViewContent', params);
-      },
-    );
+    subscribe('product_viewed', (payload: {url?: string} | undefined) => {
+      const path = urlPath(payload?.url ?? window.location.href);
+      // The sale page sends its own ViewContent (trackMetaEvent).
+      if (isSalePath(path)) return;
+      // Once per page visit: changing pack or purchase mode is not a new view.
+      if (path && viewContentPath.current === path) return;
+      const params = mapMetaViewContent(payload as never);
+      if (!params) return;
+      if (!syncConsent()) return;
+      viewContentPath.current = path;
+      track('ViewContent', params);
+    });
 
     // Published by Hydrogen only after the cart mutation succeeds.
     subscribe('product_added_to_cart', (payload) => {
+      // The sale page sends its own AddToCart (trackMetaEvent).
+      if (isSalePath(urlPath(window.location.href))) return;
       const params = mapMetaAddToCart(payload as never);
       if (params) track('AddToCart', params);
     });
@@ -239,4 +246,46 @@ export function MetaPixel() {
   }, [subscribe, ready, track, syncConsent]);
 
   return null;
+}
+
+function isSalePath(path: string | null) {
+  return !!path && path.replace(/\/$/, '') === SALE_PATH;
+}
+
+/** How long a page event waits for the consent API before it is dropped. */
+const DIRECT_EVENT_WAIT_MS = 10000;
+const DIRECT_EVENT_POLL_MS = 250;
+
+/**
+ * Sends one Meta event straight from a page, for events the page knows about
+ * better than Hydrogen's analytics bus (the Black Friday page's ViewContent
+ * and Claim button AddToCart). Follows the same marketing consent rule as
+ * <MetaPixel />: waits up to 10 s for the Customer Privacy API, sends only if
+ * marketing is allowed, and never on hosts where the pixel is off.
+ */
+export function trackMetaEvent(
+  event: MetaStorefrontEvent,
+  params: MetaEventParams,
+) {
+  if (typeof window === 'undefined') return;
+  let waited = 0;
+  const attempt = () => {
+    const allowed = readMarketingConsent();
+    if (allowed === null && waited < DIRECT_EVENT_WAIT_MS) {
+      waited += DIRECT_EVENT_POLL_MS;
+      window.setTimeout(attempt, DIRECT_EVENT_POLL_MS);
+      return;
+    }
+    // Only where <MetaPixel /> runs (production and Oxygen previews) and
+    // has booted the pixel after consent.
+    if (allowed !== true || !window.__sleepfuelMetaPixelInit) {
+      if (allowed === true && waited < DIRECT_EVENT_WAIT_MS) {
+        waited += DIRECT_EVENT_POLL_MS;
+        window.setTimeout(attempt, DIRECT_EVENT_POLL_MS);
+      }
+      return;
+    }
+    window.fbq?.('track', event, params, {eventID: createMetaEventId(event)});
+  };
+  attempt();
 }

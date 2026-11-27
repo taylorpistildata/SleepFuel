@@ -1,4 +1,4 @@
-import {Link} from 'react-router';
+import {Link, useLocation} from 'react-router';
 import {PurchaseStateProvider} from '~/lib/purchaseState';
 import {useId} from 'react';
 import type {
@@ -18,6 +18,7 @@ import {
 import {SearchResultsPredictive} from '~/components/SearchResultsPredictive';
 import {EmailCapturePopup} from '~/components/EmailCapturePopup';
 import {PromoTicker} from '~/components/PromoTicker';
+import {SALE_PATH, isSaleLive} from '~/lib/blackFriday';
 
 interface PageLayoutProps {
   cart: Promise<CartApiQueryFragment | null>;
@@ -64,18 +65,29 @@ export function PageLayout({
           rather than sitting exactly flush, since the ticker's height depends
           on the loaded font. Written as a standard utility because arbitrary
           values carrying a var() do not compile in this setup. */}
-      <main className="grow min-h-[60vh] overflow-x-hidden pt-20 sm:pt-0">
-        {children}
-      </main>
+        <main className="grow min-h-[60vh] overflow-x-hidden pt-20 sm:pt-0">
+          {children}
+        </main>
         <Footer
           footer={footer}
           header={header}
           publicStoreDomain={publicStoreDomain}
         />
-        <EmailCapturePopup />
+        <SignupPopup />
       </PurchaseStateProvider>
     </Aside.Provider>
   );
+}
+
+/**
+ * Email/SMS signup popup and its "Save 10%" side tab, everywhere except the
+ * Black Friday page while the sale runs: there the popup covered the Claim
+ * button and offered a smaller discount than the page.
+ */
+function SignupPopup() {
+  const {pathname} = useLocation();
+  if (pathname.replace(/\/$/, '') === SALE_PATH && isSaleLive()) return null;
+  return <EmailCapturePopup />;
 }
 
 function SearchAside() {
